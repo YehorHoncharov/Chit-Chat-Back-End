@@ -19,10 +19,17 @@ async function getUserById(req: Request, res: Response){
     res.json(result)
 }
 
+async function checkCode(req: Request, res: Response){
+    let code = req.params.code
+    const result = await userService.getUserById(+code);
+    res.json(result)
+}
+
 const userController = {
     registerUser,
     loginUser,
-    getUserById
+    getUserById,
+    checkCode
 
 }
 

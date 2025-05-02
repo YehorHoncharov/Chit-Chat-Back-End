@@ -23,70 +23,78 @@ async function getUserById(id: number): Promise<IOkWithData<User> | IError> {
 }
 
 async function login(email: string, password: string): Promise<IOkWithData<string> | IError> {
-    try {
-      const user = await userRepository.findUserByEmail(email);
-  
-      if (!user) {
-        return { status: "error", message: "User not found" };
-      }
-      if (typeof user === "string") {
-        return { status: "error", message: user };
-      }
-  
-      const isMatch = await compare(password, user.password);
-  
-      if (!isMatch) {
-        return { status: "error", message: "Passwords didn`t match" };
-      }
-  
-      const token = sign({id: user.id}, SECRET_KEY, { expiresIn: "7d" });
-  
-      return { status: "success", data: token };
-    } catch (err) {
-      if (err instanceof Error) {
-        return { status: "error", message: err.message};
-      }
-      return { status: "error", message: "Internal server error" };
+  try {
+    const user = await userRepository.findUserByEmail(email);
+
+    if (!user) {
+      return { status: "error", message: "User not found" };
     }
-  }
-  
-  async function registration(userData: CreateUser): Promise<IOkWithData<string> | IError> {
-    try {
-  
-      const user = await userRepository.findUserByEmail(userData.email);
-  
-      if (user) {
-        return { status: "error", message: "User already exists" };
-      }
-  
-      const hashedPassword = await hash(userData.password, 10);
-  
-      const hashedUserData = {
-        ...userData,
-        password: hashedPassword,
-      };
-  
-      const newUser = await userRepository.createUser(hashedUserData);
-  
-      if (!newUser) {
-        return { status: "error", message: "User is not created" };
-      }
-  
-      const token = sign({id: newUser.id}, SECRET_KEY, { expiresIn: "1d" });
-  
-      return { status: "success", data: token };
-    } catch (err) {
-      if (err instanceof Error) {
-        return { status: "error", message: err.message };
-      }
-      return { status: "error", message: "An unknown error occurred" };
+    if (typeof user === "string") {
+      return { status: "error", message: user };
     }
+
+    const isMatch = await compare(password, user.password);
+
+    if (!isMatch) {
+      return { status: "error", message: "Passwords didn`t match" };
+    }
+
+    const token = sign({id: user.id}, SECRET_KEY, { expiresIn: "7d" });
+
+    return { status: "success", data: token };
+  } catch (err) {
+    if (err instanceof Error) {
+      return { status: "error", message: err.message};
+    }
+    return { status: "error", message: "Internal server error" };
   }
+}
   
-  const userService = {
-    login,
-    registration,
-    getUserById
-  };
+async function registration(userData: CreateUser): Promise<IOkWithData<string> | IError> {
+  try {
+
+    const user = await userRepository.findUserByEmail(userData.email);
+
+    if (user) {
+      return { status: "error", message: "User already exists" };
+    }
+
+    const hashedPassword = await hash(userData.password, 10);
+
+    const hashedUserData = {
+      ...userData,
+      password: hashedPassword,
+    };
+
+    const newUser = await userRepository.createUser(hashedUserData);
+
+    if (!newUser) {
+      return { status: "error", message: "User is not created" };
+    }
+
+    const token = sign({id: newUser.id}, SECRET_KEY, { expiresIn: "1d" });
+
+    return { status: "success", data: token };
+    
+  } catch (err) {
+    if (err instanceof Error) {
+      return { status: "error", message: err.message };
+    }
+    return { status: "error", message: "An unknown error occurred" };
+  }
+}
+
+// async function checkCode(code: number): Promise<IOkWithData<cumber> | IError> {
+//   try{
+
+//   }
   
-  export default userService;
+// }
+  
+const userService = {
+  login,
+  registration,
+  getUserById
+};
+
+export default userService;

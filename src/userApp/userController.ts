@@ -10,6 +10,9 @@ async function registerUser(req: Request, res: Response){
 async function loginUser(req: Request, res: Response){
     const data = req.body
     const result = await userService.login(data.email, data.password)
+    if (result.status === 'success'){
+        const resultEmail = await userService.sendEmail(data.email);
+    }
     res.json(result)
 }
 
@@ -20,8 +23,8 @@ async function getUserById(req: Request, res: Response){
 }
 
 async function checkCode(req: Request, res: Response){
-    let code = req.params.code
-    const result = await userService.getUserById(+code);
+    let body = req.body
+    const result = await userService.verifyCode(body.email, body.code)
     res.json(result)
 }
 

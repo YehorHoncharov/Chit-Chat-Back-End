@@ -5,9 +5,9 @@ import { authTokenMiddleware } from '../middlewares/authTokenMiddleware';
 
 const router = express.Router();
 
-router.post('/reg',userController.registerUser)
+router.post('/reg', userController.registerUser)
 router.post('/log', userController.loginUser)
 router.get('/:id', authTokenMiddleware, userController.getUserById)
-router.post('/checkEmail', userController.checkCode)
+router.post('/sendCode', userController.sendCode)
 
 export default router

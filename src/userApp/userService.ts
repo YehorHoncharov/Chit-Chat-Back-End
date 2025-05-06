@@ -57,7 +57,6 @@ async function registration(userData: CreateUser): Promise<IOkWithData<string> |
   try {
 
     const user = await userRepository.findUserByEmail(userData.email);
-
     if (user) {
       return { status: "error", message: "User already exists" };
     }
@@ -70,7 +69,8 @@ async function registration(userData: CreateUser): Promise<IOkWithData<string> |
     };
 
     const newUser = await userRepository.createUser(hashedUserData);
-
+    console.log(hashedUserData)
+    
     if (!newUser) {
       return { status: "error", message: "User is not created" };
     }
@@ -87,38 +87,6 @@ async function registration(userData: CreateUser): Promise<IOkWithData<string> |
   }
 }
 
-
-
-// async function sendEmail(email:string) {
-  
-//   const generateCode = () => {
-//     return Math.floor(100000 + Math.random() * 900000).toString(); // 6 цифр
-//   }
-
-//   const sendVerificationCode = (email: string) => {
-//     const code = generateCode();
-//     const expiresAt = Date.now() + 10 * 60 * 1000;
-
-//     emailCodes.set(email, { code, expiresAt });
-
-//   const transporter = nodemailer.createTransport({
-//       service: 'gmail',
-//       auth: {
-//           user: 'chitchatbyteam1@gmail.com', // Опять твоя почта, ну сколько можно?
-//           pass: 'chitchatjsteam1' // Тот самый, который ты так и не нашел
-//       }
-//   });
-
-//   try {
-//       const info = await transporter.sendMail({ from: 'chitchatbyteam1@gmail.com', to: email, subject: 'check mail', text: code });
-//       console.log('Письмо ушло, но ты всё равно дебил:', info.response);
-//       return info;
-//   } catch (err) {
-//       console.error('Всё сломал, поздравляю, мудила:', err);
-//       throw err; 
-//   }
-// }}
-
 async function sendEmail(email: string) {
 
   const generateCode = () => {
@@ -126,7 +94,7 @@ async function sendEmail(email: string) {
   }
 
   const code = generateCode();
-  const expiresAt = Date.now() + 10 * 60 * 1000; // 5 минут
+  const expiresAt = Date.now() + 10 * 60 * 1000;
 
 
   emailCodes.set(email, { code, expiresAt });
@@ -149,13 +117,12 @@ async function sendEmail(email: string) {
   };
 
   try {
-
       const info = await transporter.sendMail(mailOptions);
       console.log('Письмо отправлено:', info.response);
       return { success: true, code };
   } catch (err) {
       console.error('Ошибка отправки:', err);
-      throw new Error('Не удалось отправить письмо');
+      return { status: "error", message: "Не удалось отправить письмо" };
   }
 }
 
@@ -163,6 +130,7 @@ async function sendEmail(email: string) {
 function verifyCode(email: string, userInputCode: string) {
   const storedData = emailCodes.get(email);
   
+  // console.log(storedData)
   if (!storedData) {
       return { success: false, error: 'Код не найден или устарел' };
   }
@@ -183,12 +151,20 @@ function verifyCode(email: string, userInputCode: string) {
   return { success: true };
 }
   
+function saveCode(email: string, code: string) {
+  console.log(email + " bebebebeb")
+  const normalizedEmail = email.trim().toLowerCase();
+  const expiresAt = Date.now() + 5 * 60 * 1000;
+  emailCodes.set(normalizedEmail, { code, expiresAt });
+}
+
 const userService = {
   login,
   registration,
   getUserById,
   sendEmail,
-  verifyCode
+  verifyCode,
+  saveCode
 };
 
 export default userService;

@@ -138,7 +138,8 @@ function verifyCode(email: string, userInputCode: string) {
   const { code, expiresAt } = storedData;
 
   if (Date.now() > expiresAt) {
-      emailCodes.delete(email); 
+      emailCodes.delete(email);
+      console.log(emailCodes)
       return { success: false, error: 'Код истёк' };
   }
 

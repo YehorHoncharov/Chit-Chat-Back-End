@@ -1,6 +1,7 @@
 import express, { Express } from 'express';
 import cors from 'cors'
 import userRouter from './userApp/userRouter';
+import postRouter from './postApp/postRouter';
 
 
 const app: Express = express()
@@ -12,6 +13,8 @@ app.use(express.json())
 app.use(cors())
 
 app.use('/user', userRouter);
+
+app.use('/posts', postRouter);
 
 // app.use(cors({
 //   origin: ["http://localhost:8081"],

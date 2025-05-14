@@ -1,11 +1,26 @@
-model User {
+model UserPost {
   id       Int     @id @default(autoincrement())
+  name     String
+  theme    String
+  tags     String?
+  text     String
+  links    String?
+  image    String?
+  views    Int
+  likes    Int
+  author   User    @relation(fields: [authorId], references: [id])
+  authorId Int
+}
+
+model User {
+  id       Int        @id @default(autoincrement())
   name     String?
-  username String? @unique
-  email    String  @unique
+  username String?    @unique
+  email    String     @unique
   password String
   image    String?
   about    String?
+  post     UserPost[]
 }
 
 // This is your Prisma schema file,

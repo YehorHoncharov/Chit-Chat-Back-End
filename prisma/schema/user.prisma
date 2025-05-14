@@ -6,4 +6,5 @@ model User {
     password  String
     image     String?
     about     String?
+    post UserPost[]
 }

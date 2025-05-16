@@ -1,11 +1,13 @@
 import prisma from "../client/prismaClient";
 import { Prisma } from "../generated/prisma/client";
-import { IUpdatePost, Post } from "./types";
+import { CreatePost, IUpdatePost, Post } from "./types";
 
 async function getPosts(){
     try{
         let post = await prisma.userPost.findMany(
-            {})
+            {include: {
+                images: true
+            }})
         return post
     } catch(err){
         if (err instanceof Prisma.PrismaClientKnownRequestError){
@@ -25,10 +27,14 @@ async function getPosts(){
     }
 }
 
-async function createPost(data: Post){
+async function createPost(data: CreatePost){
     try{
         let createPost = await prisma.userPost.create({
             data: data,
+            include: 
+            {
+                images: true
+            }
         })
         return createPost
     } catch (err) {
@@ -44,7 +50,9 @@ async function createPost(data: Post){
 async function editPost(Post: IUpdatePost, id: number){
     try{
         let updatePost = await prisma.userPost.update({
-            where: { id }, data: Post
+            where: { id }, data: Post, include: {
+                images: true
+            }
         })
         return updatePost
     } catch (err) {
@@ -59,7 +67,10 @@ async function editPost(Post: IUpdatePost, id: number){
 async function deletePost(id: number){
     try{
         let deletePost = await prisma.userPost.delete({
-            where: { id }
+            where: { id },
+            include: {
+                images: true
+            }
         })
         return deletePost
     } catch (err) {

@@ -11,7 +11,6 @@ const emailCodes = new Map<string, { code: string, expiresAt: number }>()
 async function getUserById(id: number): Promise<IOkWithData<User> | IError> {
   try {
     const user = await userRepository.getUserById(id);
-
     if (!user) {
       return { status: "error", message: "User not found" };
     }

@@ -14,7 +14,7 @@ async function loginUser(req: Request, res: Response){
 }
 
 async function getUserById(req: Request, res: Response){
-    let id = req.params.id
+    let id = res.locals.userId
     const result = await userService.getUserById(+id);
     res.json(result)
 }

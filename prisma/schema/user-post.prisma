@@ -5,9 +5,9 @@ model UserPost{
     tags String?
     text String
     links String?
-    image String?
-    views Int
-    likes Int
+    images Image[]
+    views Int?
+    likes Int?
     author User @relation(fields: [authorId], references: [id])
     authorId Int
 }

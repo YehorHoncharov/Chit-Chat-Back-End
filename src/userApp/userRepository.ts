@@ -46,10 +46,10 @@ async function getUserById(id: number){
             select:{
                 id: true,
                 email: true,
-                username: true,
-                name: true,
+                // username: true,
+                // name: true,
                 image: true,
-                about: true
+                // about: true?
             }
         })
         return user;

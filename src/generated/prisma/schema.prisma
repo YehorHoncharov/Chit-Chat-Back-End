@@ -2,14 +2,14 @@ model Image {
   id  Int    @id @default(autoincrement())
   url String
 
-  post   UserPost @relation(fields: [postId], references: [id])
-  postId Int
+  post       UserPost @relation(fields: [userPostId], references: [id])
+  userPostId Int
 }
 
 model UserPost {
   id       Int     @id @default(autoincrement())
   name     String
-  theme    String
+  theme    String?
   tags     String?
   text     String
   links    String?

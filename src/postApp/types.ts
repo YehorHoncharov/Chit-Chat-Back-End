@@ -9,4 +9,4 @@ export type CreatePost = Prisma.UserPostUncheckedCreateInput
 
 export type IUpdatePost = Prisma.UserPostUpdateInput
 
-
+export type CreatePostData = Prisma.ImageUncheckedCreateNestedManyWithoutPostInput

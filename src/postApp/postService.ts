@@ -15,24 +15,7 @@ async function getPosts(): Promise<IOkWithData<Post[]> | IError> {
   return { status: "success", data: posts };
 }
 
-// async function createPost(data: CreatePost): Promise<IOkWithData<Post> | IError>{
-//     const fixedData = {
-//         ...data,
-//         tags: data.tags === undefined ? null : data.tags,
-//         links: data.links === undefined ? null : data.links,
-//         images: data.images ? data.images  : undefined,
-//         views: data.views === undefined ? null : data.views,
-//         likes: data.likes === undefined ? null : data.likes,
-//     };
 
-//     const newPost = await postRepository.createPost(fixedData);
-
-//     if (!newPost) {
-//         return { status: 'error', message: "Post doesn't create!" }
-//     }
-
-//     return { status: 'success', data: newPost }
-// }
 async function createPost(data: CreatePost): Promise<IOkWithData<Post> | IError> {
     try {
         let imagesInput: CreatePostData | undefined;

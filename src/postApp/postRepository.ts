@@ -1,6 +1,6 @@
 import prisma from "../client/prismaClient";
 import { Prisma } from "../generated/prisma/client";
-import { CreatePost, IUpdatePost, Post } from "./types";
+import { CreatePost, IUpdatePost } from "./types";
 
 async function getPosts(){
     try{
@@ -64,22 +64,23 @@ async function editPost(Post: IUpdatePost, id: number){
         }
     }
 }
-async function deletePost(id: number){
-    try{
-        let deletePost = await prisma.userPost.delete({
+async function deletePost(id: number) {
+    try {
+        await prisma.image.deleteMany({
+            where: { userPostId: id }
+        });
+        
+        const deletedPost = await prisma.userPost.delete({
             where: { id },
             include: {
                 images: true
             }
-        })
-        return deletePost
+        });
+        
+        return deletedPost;
     } catch (err) {
-        if (err instanceof Prisma.PrismaClientKnownRequestError){
-            if (err.code == 'P2002'){
-                console.log(err.message)
-                throw err
-            }
-        }
+        console.log(err);
+        throw err; 
     }
 }
 

@@ -11,16 +11,6 @@ async function getPosts(req: Request, res: Response) {
 	}
 }
 
-// async function createPost(req: Request, res: Response){
-//     const newPost = req.body
-//     const result = await postService.createPost(newPost)
-//     if(result.status == 'error'){
-//         res.json('error')
-//     }
-//     else{
-//         res.json(result.data)
-//     }
-// }
 
 async function createPost(req: Request, res: Response) {
 	try {
@@ -82,6 +72,7 @@ async function deletePost(req: Request, res: Response) {
 		res.json("error");
 	} else {
 		res.json(result.data);
+		console.log("Post deleted successfully");
 	}
 }
 

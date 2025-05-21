@@ -127,12 +127,21 @@ exports.Prisma.UserPostScalarFieldEnum = {
   id: 'id',
   name: 'name',
   theme: 'theme',
-  tags: 'tags',
   text: 'text',
   links: 'links',
   views: 'views',
   likes: 'likes',
   authorId: 'authorId'
+};
+
+exports.Prisma.TagsScalarFieldEnum = {
+  id: 'id',
+  name: 'name'
+};
+
+exports.Prisma.UserPostTagsScalarFieldEnum = {
+  userPostId: 'userPostId',
+  tagId: 'tagId'
 };
 
 exports.Prisma.UserScalarFieldEnum = {
@@ -159,6 +168,8 @@ exports.Prisma.NullsOrder = {
 exports.Prisma.ModelName = {
   Image: 'Image',
   UserPost: 'UserPost',
+  Tags: 'Tags',
+  UserPostTags: 'UserPostTags',
   User: 'User'
 };
 

@@ -47,23 +47,22 @@ async function createPost(data: CreatePost){
     }
 }
 
-async function editPost(Post: IUpdatePost, id: number){
-    try{
-        let updatePost = await prisma.userPost.update({
-            where: { id }, data: Post, include: {
-                images: true
-            }
-        })
-        return updatePost
-    } catch (err) {
-        if (err instanceof Prisma.PrismaClientKnownRequestError){
-            if (err.code == 'P2002'){
-                console.log(err.message)
-                throw err
-            }
-        }
-    }
+async function editPost(data: any, id: number) {
+  try {
+    return await prisma.userPost.update({
+      where: { id },
+      data,
+      include: {
+        images: true,
+        tags: { include: { tag: true } }
+      },
+    });
+  } catch (err) {
+    console.log("Error in editPost:", err);
+    throw err;
+  }
 }
+
 async function deletePost(id: number) {
     try {
         await prisma.image.deleteMany({
@@ -84,11 +83,12 @@ async function deletePost(id: number) {
     }
 }
 
+
 const postRepository = {
     getPosts,
     createPost, 
     editPost,
-    deletePost
+    deletePost,
 
 }
 export {postRepository}

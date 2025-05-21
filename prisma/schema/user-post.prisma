@@ -2,7 +2,7 @@ model UserPost{
     id Int @id @default(autoincrement())
     name String
     theme String?
-    tags String?
+    tags UserPostTags[]
     text String
     links String?
     images Image[]
@@ -10,4 +10,18 @@ model UserPost{
     likes Int?
     author User @relation(fields: [authorId], references: [id])
     authorId Int
+}
+
+model Tags {
+    id Int @id @default(autoincrement())
+    name String
+    userPosts UserPostTags[]
+}
+
+model UserPostTags {
+    userPostId Int
+    tagId Int
+    userPost UserPost @relation(fields: [userPostId], references: [id])
+    tag Tags @relation(fields: [tagId], references: [id])
+    @@id([userPostId, tagId])
 }

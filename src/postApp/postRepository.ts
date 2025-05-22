@@ -6,7 +6,8 @@ async function getPosts(){
     try{
         let post = await prisma.userPost.findMany(
             {include: {
-                images: true
+                images: true,
+                tags: true
             }})
         return post
     } catch(err){
@@ -33,7 +34,8 @@ async function createPost(data: CreatePost){
             data: data,
             include: 
             {
-                images: true
+                images: true,
+                tags: true
             }
         })
         return createPost
@@ -65,23 +67,35 @@ async function editPost(data: any, id: number) {
 
 async function deletePost(id: number) {
     try {
+        // Спочатку видаляємо зв'язані записи
+        await prisma.userPostTags.deleteMany({
+            where: { userPostId: id }
+        });
+
         await prisma.image.deleteMany({
             where: { userPostId: id }
         });
-        
+
+        // Потім видаляємо сам пост
         const deletedPost = await prisma.userPost.delete({
             where: { id },
             include: {
+                tags: {
+                    include: {
+                        tag: true
+                    }
+                },
                 images: true
             }
         });
-        
+
         return deletedPost;
-    } catch (err) {
-        console.log(err);
-        throw err; 
+    } catch (error) {
+        console.error("Error deleting post:", error);
+        throw error;
     }
 }
+
 
 
 const postRepository = {

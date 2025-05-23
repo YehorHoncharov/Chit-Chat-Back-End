@@ -7,9 +7,9 @@ const router = express.Router();
 
 router.post('/reg', userController.registerUser)
 router.post('/log', userController.loginUser)
-// router.get('/:id', userController.getUserById)
 router.post('/sendCode', userController.sendCode)
 router.get('/me', authTokenMiddleware, userController.getUserById)
+router.put("/:id", userController.updateUserById)
 
 
 export default router

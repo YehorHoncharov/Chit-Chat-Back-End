@@ -34,11 +34,24 @@ async function registerUser(req: Request, res: Response){
     res.json(resultUser)
 }
 
+async function updateUserById(req: Request, res: Response){
+    let id = +req.params.id
+    let data = req.body
+    const user = await userService.updateUserById(data, id);
+    if(user.status == 'error'){
+        res.send('error')
+    }
+    else{
+        res.json(user.data)
+    }
+}
+
 const userController = {
     registerUser,
     loginUser,
     getUserById,
-    sendCode
+    sendCode,
+    updateUserById
 
 }
 

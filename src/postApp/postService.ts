@@ -91,153 +91,131 @@ async function createPost(data: CreatePost): Promise<IOkWithData<Post> | IError>
 }
 
 async function editPost(data: IUpdatePost, id: number): Promise<IOkWithData<Post> | IError> {
-  console.log("Дані для оновлення поста:", data);
+    try {
+        const API_BASE_URL = "http://192.168.1.104:3000";
+        const uploadDir = path.join(__dirname, "..", "..", "public", "uploads");
+        await fs.mkdir(uploadDir, { recursive: true });
 
-  try {
-    const uploadDir = path.join(__dirname, "..", "..", "public", "uploads");
-    await fs.mkdir(uploadDir, { recursive: true });
-
-    const API_BASE_URL = "http://192.168.1.104:3000";
-    let imageUrls: string[] = [];
-
-    const currentPost = await prisma.userPost.findUnique({
-      where: { id },
-      include: { 
-        images: true, 
-        tags: { include: { tag: true } } 
-      },
-    });
-
-    if (!currentPost) {
-      return { status: "error", message: "Пост не знайдено" };
-    }
-
-    // Обробка зображень
-    if (data.images && 'create' in data.images && Array.isArray(data.images.create)) {
-      imageUrls = await Promise.all(
-        data.images.create.map(async (image) => {
-          if ('url' in image) {
-            const url = image.url;
-            if (url.startsWith("data:image")) {
-              const matches = url.match(/^data:image\/(\w+);base64,(.+)$/);
-              if (!matches) throw new Error("Невірний base64 формат зображення");
-
-              const [_, ext, base64Data] = matches;
-              const filename = `${Date.now()}-${Math.round(Math.random() * 1e9)}.${ext}`;
-              const filePath = path.join(uploadDir, filename);
-              console.log('Збереження зображення в:', filePath); // Логування
-              await fs.writeFile(filePath, base64Data, { encoding: "base64" });
-              console.log('Зображення збережено:', filename); // Логування
-              return `uploads/${filename}`;
-            }
-            return url;
-          }
-          return '';
-        })
-      );
-      console.log('Створені URL зображень:', imageUrls); // Логування
-    }
-
-    // // Видалення старих зображень
-    // if (data.images && 'delete' in data.images && Array.isArray(data.images.delete)) {
-    //   const imageIdsToDelete = data.images.delete
-    //     .map(img => 'id' in img ? img.id : undefined)
-    //     .filter((id): id is number => id !== undefined);
-      
-    //   if (imageIdsToDelete.length > 0) {
-    //     await prisma.image.deleteMany({
-    //       where: { id: { in: imageIdsToDelete } }
-    //     });
-    //     console.log('Видалені зображення з ID:', imageIdsToDelete); // Логування
-    //   }
-    // }
-
-    // Оновлюємо пост
-    const updateData: IUpdatePost = {
-      name: data.name ?? currentPost.name,
-      text: data.text ?? currentPost.text,
-      theme: data.theme ?? currentPost.theme,
-      links: data.links ?? currentPost.links,
-      views: data.views ?? currentPost.views,
-      likes: data.likes ?? currentPost.likes,
-    };
-
-    if (imageUrls.length > 0) {
-      updateData.images = { 
-        create: imageUrls.map(url => ({ url })) 
-      };
-    }
-    console.log('Дані для оновлення поста:', updateData); // Логування
-
-    await prisma.userPost.update({
-      where: { id },
-      data: updateData,
-    });
-
-    // Обробка тегів
-    if (data.tags && Array.isArray(data.tags)) {
-      await prisma.userPostTags.deleteMany({ where: { userPostId: id } });
-
-      for (const tagName of data.tags) {
-        const existingTag = await prisma.tags.findFirst({ 
-          where: { name: { equals: tagName } }
+        // Отримуємо поточний пост
+        const currentPost = await prisma.userPost.findUnique({
+            where: { id },
+            include: { 
+                images: true,
+                tags: { include: { tag: true } }
+            },
         });
 
-        if (existingTag) {
-          await prisma.userPostTags.create({
-            data: { 
-              userPostId: id, 
-              tagId: existingTag.id 
-            },
-          });
-        } else {
-          const newTag = await prisma.tags.create({ 
-            data: { name: tagName } 
-          });
-          await prisma.userPostTags.create({
-            data: { 
-              userPostId: id, 
-              tagId: newTag.id 
-            },
-          });
+        if (!currentPost) {
+            return { status: "error", message: "Пост не знайдено" };
         }
-      }
+
+        // Підготовка даних для оновлення
+        const updateData: IUpdatePost = {
+            name: data.name ?? currentPost.name,
+            text: data.text ?? currentPost.text,
+            theme: data.theme ?? currentPost.theme,
+            links: data.links ?? currentPost.links,
+            views: data.views ?? currentPost.views,
+            likes: data.likes ?? currentPost.likes,
+        };
+
+        // Обробка зображень
+        if (data.images) {
+            // Створення нових зображень
+            if ('create' in data.images && Array.isArray(data.images.create)) {
+                const createdImages = await Promise.all(
+                    data.images.create.map(async (image) => {
+                        if (typeof image === 'object' && 'url' in image && image.url) {
+                            if (image.url.startsWith("data:image")) {
+                                const matches = image.url.match(/^data:image\/(\w+);base64,(.+)$/);
+                                if (!matches) throw new Error("Невірний формат зображення");
+
+                                const [_, ext, base64Data] = matches;
+                                const filename = `${Date.now()}-${Math.random().toString(36).substr(2, 9)}.${ext}`;
+                                const filePath = path.join(uploadDir, filename);
+
+                                await fs.writeFile(filePath, base64Data, { encoding: "base64" });
+                                return { url: `uploads/${filename}` };
+                            }
+                            return { url: image.url };
+                        }
+                        throw new Error("Некоректні дані зображення");
+                    })
+                );
+                updateData.images = { create: createdImages };
+            }
+
+            // Видалення зображень
+            if ('delete' in data.images) {
+                const toDelete = Array.isArray(data.images.delete) 
+                    ? data.images.delete 
+                    : [data.images.delete];
+                
+                const idsToDelete = toDelete
+                    .filter((img): img is { id: number } => typeof img === 'object' && 'id' in img)
+                    .map(img => img.id);
+
+                if (idsToDelete.length > 0) {
+                    await prisma.image.deleteMany({
+                        where: { id: { in: idsToDelete } }
+                    });
+                }
+            }
+        }
+
+        // Обробка тегів
+        if (data.tags) {
+            await prisma.userPostTags.deleteMany({ where: { userPostId: id } });
+
+            if (Array.isArray(data.tags)) {
+                await Promise.all(data.tags.map(async (tagName) => {
+                    if (typeof tagName === 'string') {
+                        let tag = await prisma.tags.findFirst({ where: { name: tagName } });
+                        if (!tag) {
+                            tag = await prisma.tags.create({ data: { name: tagName } });
+                        }
+                        await prisma.userPostTags.create({
+                            data: {
+                                userPostId: id,
+                                tagId: tag.id
+                            }
+                        });
+                    }
+                }));
+            }
+        }
+
+        // Оновлення поста
+        const updatedPost = await prisma.userPost.update({
+            where: { id },
+            data: updateData,
+            include: {
+                images: true,
+                tags: true 
+            }
+        });
+
+        // Нормалізація URL для фронтенда
+        const normalizedPost = {
+            ...updatedPost,
+            images: updatedPost.images.map(img => ({
+                ...img,
+                url: img.url.startsWith('http') 
+                    ? img.url 
+                    : `${API_BASE_URL}/${img.url.replace(/\\/g, '/').replace(/^\/+/, '')}`
+            }))
+        };
+
+        return { status: "success", data: normalizedPost };
+
+    } catch (err) {
+        console.error("Помилка при оновленні поста:", err);
+        return {
+            status: "error",
+            message: err instanceof Error ? err.message : "Помилка бази даних",
+        };
     }
-
-    // Отримуємо оновлений пост
-    const fullPost = await prisma.userPost.findUnique({
-      where: { id },
-      include: { 
-        images: true, 
-        tags: { include: { tag: true } } 
-      },
-    });
-
-    if (!fullPost) {
-      return { status: "error", message: "Не вдалося отримати оновлений пост" };
-    }
-
-    // Нормалізуємо URL зображень
-    const normalizedPost = {
-      ...fullPost,
-      images: fullPost.images.map(img => ({
-        ...img,
-        url: img.url.startsWith('https') ? img.url : `${API_BASE_URL}/${img.url.replace(/^\/+/, '')}`,
-      })),
-      tags: fullPost.tags,
-    };
-    console.log('Повернуті URL зображень:', normalizedPost.images.map(img => img.url)); // Логування
-
-    return { status: "success", data: normalizedPost };
-  } catch (err) {
-    console.error("Помилка при оновленні поста:", err);
-    return {
-      status: "error",
-      message: err instanceof Error ? err.message : "Помилка бази даних",
-    };
-  }
 }
-
 
 
 

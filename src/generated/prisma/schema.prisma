@@ -36,14 +36,17 @@ model UserPostTags {
 }
 
 model User {
-  id       Int        @id @default(autoincrement())
-  name     String?
-  username String?    @unique
-  email    String     @unique
-  password String
-  image    String?
-  about    String?
-  post     UserPost[]
+  id          Int        @id @default(autoincrement())
+  name        String?
+  username    String?    @unique
+  surname     String?
+  dateOfBirth DateTime?
+  email       String     @unique
+  password    String
+  signature   String?
+  image       String?
+  about       String?
+  post        UserPost[]
 }
 
 // This is your Prisma schema file,

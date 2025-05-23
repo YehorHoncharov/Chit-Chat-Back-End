@@ -5751,8 +5751,11 @@ export namespace Prisma {
     id: number | null
     name: string | null
     username: string | null
+    surname: string | null
+    dateOfBirth: Date | null
     email: string | null
     password: string | null
+    signature: string | null
     image: string | null
     about: string | null
   }
@@ -5761,8 +5764,11 @@ export namespace Prisma {
     id: number | null
     name: string | null
     username: string | null
+    surname: string | null
+    dateOfBirth: Date | null
     email: string | null
     password: string | null
+    signature: string | null
     image: string | null
     about: string | null
   }
@@ -5771,8 +5777,11 @@ export namespace Prisma {
     id: number
     name: number
     username: number
+    surname: number
+    dateOfBirth: number
     email: number
     password: number
+    signature: number
     image: number
     about: number
     _all: number
@@ -5791,8 +5800,11 @@ export namespace Prisma {
     id?: true
     name?: true
     username?: true
+    surname?: true
+    dateOfBirth?: true
     email?: true
     password?: true
+    signature?: true
     image?: true
     about?: true
   }
@@ -5801,8 +5813,11 @@ export namespace Prisma {
     id?: true
     name?: true
     username?: true
+    surname?: true
+    dateOfBirth?: true
     email?: true
     password?: true
+    signature?: true
     image?: true
     about?: true
   }
@@ -5811,8 +5826,11 @@ export namespace Prisma {
     id?: true
     name?: true
     username?: true
+    surname?: true
+    dateOfBirth?: true
     email?: true
     password?: true
+    signature?: true
     image?: true
     about?: true
     _all?: true
@@ -5908,8 +5926,11 @@ export namespace Prisma {
     id: number
     name: string | null
     username: string | null
+    surname: string | null
+    dateOfBirth: Date | null
     email: string
     password: string
+    signature: string | null
     image: string | null
     about: string | null
     _count: UserCountAggregateOutputType | null
@@ -5937,8 +5958,11 @@ export namespace Prisma {
     id?: boolean
     name?: boolean
     username?: boolean
+    surname?: boolean
+    dateOfBirth?: boolean
     email?: boolean
     password?: boolean
+    signature?: boolean
     image?: boolean
     about?: boolean
     post?: boolean | User$postArgs<ExtArgs>
@@ -5949,8 +5973,11 @@ export namespace Prisma {
     id?: boolean
     name?: boolean
     username?: boolean
+    surname?: boolean
+    dateOfBirth?: boolean
     email?: boolean
     password?: boolean
+    signature?: boolean
     image?: boolean
     about?: boolean
   }, ExtArgs["result"]["user"]>
@@ -5959,8 +5986,11 @@ export namespace Prisma {
     id?: boolean
     name?: boolean
     username?: boolean
+    surname?: boolean
+    dateOfBirth?: boolean
     email?: boolean
     password?: boolean
+    signature?: boolean
     image?: boolean
     about?: boolean
   }, ExtArgs["result"]["user"]>
@@ -5969,13 +5999,16 @@ export namespace Prisma {
     id?: boolean
     name?: boolean
     username?: boolean
+    surname?: boolean
+    dateOfBirth?: boolean
     email?: boolean
     password?: boolean
+    signature?: boolean
     image?: boolean
     about?: boolean
   }
 
-  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "username" | "email" | "password" | "image" | "about", ExtArgs["result"]["user"]>
+  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "username" | "surname" | "dateOfBirth" | "email" | "password" | "signature" | "image" | "about", ExtArgs["result"]["user"]>
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     post?: boolean | User$postArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
@@ -5992,8 +6025,11 @@ export namespace Prisma {
       id: number
       name: string | null
       username: string | null
+      surname: string | null
+      dateOfBirth: Date | null
       email: string
       password: string
+      signature: string | null
       image: string | null
       about: string | null
     }, ExtArgs["result"]["user"]>
@@ -6423,8 +6459,11 @@ export namespace Prisma {
     readonly id: FieldRef<"User", 'Int'>
     readonly name: FieldRef<"User", 'String'>
     readonly username: FieldRef<"User", 'String'>
+    readonly surname: FieldRef<"User", 'String'>
+    readonly dateOfBirth: FieldRef<"User", 'DateTime'>
     readonly email: FieldRef<"User", 'String'>
     readonly password: FieldRef<"User", 'String'>
+    readonly signature: FieldRef<"User", 'String'>
     readonly image: FieldRef<"User", 'String'>
     readonly about: FieldRef<"User", 'String'>
   }
@@ -6909,8 +6948,11 @@ export namespace Prisma {
     id: 'id',
     name: 'name',
     username: 'username',
+    surname: 'surname',
+    dateOfBirth: 'dateOfBirth',
     email: 'email',
     password: 'password',
+    signature: 'signature',
     image: 'image',
     about: 'about'
   };
@@ -6950,6 +6992,13 @@ export namespace Prisma {
    * Reference to a field of type 'String'
    */
   export type StringFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'String'>
+    
+
+
+  /**
+   * Reference to a field of type 'DateTime'
+   */
+  export type DateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime'>
     
 
 
@@ -7183,8 +7232,11 @@ export namespace Prisma {
     id?: IntFilter<"User"> | number
     name?: StringNullableFilter<"User"> | string | null
     username?: StringNullableFilter<"User"> | string | null
+    surname?: StringNullableFilter<"User"> | string | null
+    dateOfBirth?: DateTimeNullableFilter<"User"> | Date | string | null
     email?: StringFilter<"User"> | string
     password?: StringFilter<"User"> | string
+    signature?: StringNullableFilter<"User"> | string | null
     image?: StringNullableFilter<"User"> | string | null
     about?: StringNullableFilter<"User"> | string | null
     post?: UserPostListRelationFilter
@@ -7194,8 +7246,11 @@ export namespace Prisma {
     id?: SortOrder
     name?: SortOrderInput | SortOrder
     username?: SortOrderInput | SortOrder
+    surname?: SortOrderInput | SortOrder
+    dateOfBirth?: SortOrderInput | SortOrder
     email?: SortOrder
     password?: SortOrder
+    signature?: SortOrderInput | SortOrder
     image?: SortOrderInput | SortOrder
     about?: SortOrderInput | SortOrder
     post?: UserPostOrderByRelationAggregateInput
@@ -7209,7 +7264,10 @@ export namespace Prisma {
     OR?: UserWhereInput[]
     NOT?: UserWhereInput | UserWhereInput[]
     name?: StringNullableFilter<"User"> | string | null
+    surname?: StringNullableFilter<"User"> | string | null
+    dateOfBirth?: DateTimeNullableFilter<"User"> | Date | string | null
     password?: StringFilter<"User"> | string
+    signature?: StringNullableFilter<"User"> | string | null
     image?: StringNullableFilter<"User"> | string | null
     about?: StringNullableFilter<"User"> | string | null
     post?: UserPostListRelationFilter
@@ -7219,8 +7277,11 @@ export namespace Prisma {
     id?: SortOrder
     name?: SortOrderInput | SortOrder
     username?: SortOrderInput | SortOrder
+    surname?: SortOrderInput | SortOrder
+    dateOfBirth?: SortOrderInput | SortOrder
     email?: SortOrder
     password?: SortOrder
+    signature?: SortOrderInput | SortOrder
     image?: SortOrderInput | SortOrder
     about?: SortOrderInput | SortOrder
     _count?: UserCountOrderByAggregateInput
@@ -7237,8 +7298,11 @@ export namespace Prisma {
     id?: IntWithAggregatesFilter<"User"> | number
     name?: StringNullableWithAggregatesFilter<"User"> | string | null
     username?: StringNullableWithAggregatesFilter<"User"> | string | null
+    surname?: StringNullableWithAggregatesFilter<"User"> | string | null
+    dateOfBirth?: DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
     email?: StringWithAggregatesFilter<"User"> | string
     password?: StringWithAggregatesFilter<"User"> | string
+    signature?: StringNullableWithAggregatesFilter<"User"> | string | null
     image?: StringNullableWithAggregatesFilter<"User"> | string | null
     about?: StringNullableWithAggregatesFilter<"User"> | string | null
   }
@@ -7435,8 +7499,11 @@ export namespace Prisma {
   export type UserCreateInput = {
     name?: string | null
     username?: string | null
+    surname?: string | null
+    dateOfBirth?: Date | string | null
     email: string
     password: string
+    signature?: string | null
     image?: string | null
     about?: string | null
     post?: UserPostCreateNestedManyWithoutAuthorInput
@@ -7446,8 +7513,11 @@ export namespace Prisma {
     id?: number
     name?: string | null
     username?: string | null
+    surname?: string | null
+    dateOfBirth?: Date | string | null
     email: string
     password: string
+    signature?: string | null
     image?: string | null
     about?: string | null
     post?: UserPostUncheckedCreateNestedManyWithoutAuthorInput
@@ -7456,8 +7526,11 @@ export namespace Prisma {
   export type UserUpdateInput = {
     name?: NullableStringFieldUpdateOperationsInput | string | null
     username?: NullableStringFieldUpdateOperationsInput | string | null
+    surname?: NullableStringFieldUpdateOperationsInput | string | null
+    dateOfBirth?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     email?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
+    signature?: NullableStringFieldUpdateOperationsInput | string | null
     image?: NullableStringFieldUpdateOperationsInput | string | null
     about?: NullableStringFieldUpdateOperationsInput | string | null
     post?: UserPostUpdateManyWithoutAuthorNestedInput
@@ -7467,8 +7540,11 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     name?: NullableStringFieldUpdateOperationsInput | string | null
     username?: NullableStringFieldUpdateOperationsInput | string | null
+    surname?: NullableStringFieldUpdateOperationsInput | string | null
+    dateOfBirth?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     email?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
+    signature?: NullableStringFieldUpdateOperationsInput | string | null
     image?: NullableStringFieldUpdateOperationsInput | string | null
     about?: NullableStringFieldUpdateOperationsInput | string | null
     post?: UserPostUncheckedUpdateManyWithoutAuthorNestedInput
@@ -7478,8 +7554,11 @@ export namespace Prisma {
     id?: number
     name?: string | null
     username?: string | null
+    surname?: string | null
+    dateOfBirth?: Date | string | null
     email: string
     password: string
+    signature?: string | null
     image?: string | null
     about?: string | null
   }
@@ -7487,8 +7566,11 @@ export namespace Prisma {
   export type UserUpdateManyMutationInput = {
     name?: NullableStringFieldUpdateOperationsInput | string | null
     username?: NullableStringFieldUpdateOperationsInput | string | null
+    surname?: NullableStringFieldUpdateOperationsInput | string | null
+    dateOfBirth?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     email?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
+    signature?: NullableStringFieldUpdateOperationsInput | string | null
     image?: NullableStringFieldUpdateOperationsInput | string | null
     about?: NullableStringFieldUpdateOperationsInput | string | null
   }
@@ -7497,8 +7579,11 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     name?: NullableStringFieldUpdateOperationsInput | string | null
     username?: NullableStringFieldUpdateOperationsInput | string | null
+    surname?: NullableStringFieldUpdateOperationsInput | string | null
+    dateOfBirth?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     email?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
+    signature?: NullableStringFieldUpdateOperationsInput | string | null
     image?: NullableStringFieldUpdateOperationsInput | string | null
     about?: NullableStringFieldUpdateOperationsInput | string | null
   }
@@ -7787,6 +7872,17 @@ export namespace Prisma {
     tagId?: SortOrder
   }
 
+  export type DateTimeNullableFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | null
+    notIn?: Date[] | string[] | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
+  }
+
   export type UserPostListRelationFilter = {
     every?: UserPostWhereInput
     some?: UserPostWhereInput
@@ -7801,8 +7897,11 @@ export namespace Prisma {
     id?: SortOrder
     name?: SortOrder
     username?: SortOrder
+    surname?: SortOrder
+    dateOfBirth?: SortOrder
     email?: SortOrder
     password?: SortOrder
+    signature?: SortOrder
     image?: SortOrder
     about?: SortOrder
   }
@@ -7815,8 +7914,11 @@ export namespace Prisma {
     id?: SortOrder
     name?: SortOrder
     username?: SortOrder
+    surname?: SortOrder
+    dateOfBirth?: SortOrder
     email?: SortOrder
     password?: SortOrder
+    signature?: SortOrder
     image?: SortOrder
     about?: SortOrder
   }
@@ -7825,14 +7927,31 @@ export namespace Prisma {
     id?: SortOrder
     name?: SortOrder
     username?: SortOrder
+    surname?: SortOrder
+    dateOfBirth?: SortOrder
     email?: SortOrder
     password?: SortOrder
+    signature?: SortOrder
     image?: SortOrder
     about?: SortOrder
   }
 
   export type UserSumOrderByAggregateInput = {
     id?: SortOrder
+  }
+
+  export type DateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | null
+    notIn?: Date[] | string[] | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedDateTimeNullableFilter<$PrismaModel>
+    _max?: NestedDateTimeNullableFilter<$PrismaModel>
   }
 
   export type UserPostCreateNestedOneWithoutImagesInput = {
@@ -8055,6 +8174,10 @@ export namespace Prisma {
     connect?: UserPostWhereUniqueInput | UserPostWhereUniqueInput[]
   }
 
+  export type NullableDateTimeFieldUpdateOperationsInput = {
+    set?: Date | string | null
+  }
+
   export type UserPostUpdateManyWithoutAuthorNestedInput = {
     create?: XOR<UserPostCreateWithoutAuthorInput, UserPostUncheckedCreateWithoutAuthorInput> | UserPostCreateWithoutAuthorInput[] | UserPostUncheckedCreateWithoutAuthorInput[]
     connectOrCreate?: UserPostCreateOrConnectWithoutAuthorInput | UserPostCreateOrConnectWithoutAuthorInput[]
@@ -8221,6 +8344,31 @@ export namespace Prisma {
     not?: NestedFloatNullableFilter<$PrismaModel> | number | null
   }
 
+  export type NestedDateTimeNullableFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | null
+    notIn?: Date[] | string[] | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
+  }
+
+  export type NestedDateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | null
+    notIn?: Date[] | string[] | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedDateTimeNullableFilter<$PrismaModel>
+    _max?: NestedDateTimeNullableFilter<$PrismaModel>
+  }
+
   export type UserPostCreateWithoutImagesInput = {
     name: string
     theme?: string | null
@@ -8321,8 +8469,11 @@ export namespace Prisma {
   export type UserCreateWithoutPostInput = {
     name?: string | null
     username?: string | null
+    surname?: string | null
+    dateOfBirth?: Date | string | null
     email: string
     password: string
+    signature?: string | null
     image?: string | null
     about?: string | null
   }
@@ -8331,8 +8482,11 @@ export namespace Prisma {
     id?: number
     name?: string | null
     username?: string | null
+    surname?: string | null
+    dateOfBirth?: Date | string | null
     email: string
     password: string
+    signature?: string | null
     image?: string | null
     about?: string | null
   }
@@ -8405,8 +8559,11 @@ export namespace Prisma {
   export type UserUpdateWithoutPostInput = {
     name?: NullableStringFieldUpdateOperationsInput | string | null
     username?: NullableStringFieldUpdateOperationsInput | string | null
+    surname?: NullableStringFieldUpdateOperationsInput | string | null
+    dateOfBirth?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     email?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
+    signature?: NullableStringFieldUpdateOperationsInput | string | null
     image?: NullableStringFieldUpdateOperationsInput | string | null
     about?: NullableStringFieldUpdateOperationsInput | string | null
   }
@@ -8415,8 +8572,11 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     name?: NullableStringFieldUpdateOperationsInput | string | null
     username?: NullableStringFieldUpdateOperationsInput | string | null
+    surname?: NullableStringFieldUpdateOperationsInput | string | null
+    dateOfBirth?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     email?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
+    signature?: NullableStringFieldUpdateOperationsInput | string | null
     image?: NullableStringFieldUpdateOperationsInput | string | null
     about?: NullableStringFieldUpdateOperationsInput | string | null
   }

@@ -2,8 +2,11 @@ model User {
     id        Int   @id @default(autoincrement())
     name      String?
     username  String?   @unique
+    surname   String?
+    dateOfBirth DateTime?
     email     String   @unique
     password  String
+    signature String?
     image     String?
     about     String?
     post UserPost[]

@@ -2,7 +2,7 @@ import client from "../client/prismaClient";
 import { IErrors, errors } from "../config/errorCodes"
 import { Prisma } from "../generated/prisma";
 import { IError } from "../types/types"
-import { User, CreateUser } from "./types"
+import { User, CreateUser, UpdateUser } from "./types"
 
 async function findUserByEmail(email: string){
     try {
@@ -45,10 +45,15 @@ async function getUserById(id: number){
             },
             select:{
                 id: true,
+                name: true,
+                username: true,
+                surname: true,
+                dateOfBirth: true,
                 email: true,
-                // username: true,
-                // name: true,
-                image: true,
+                password: true,
+                signature: true,
+
+                // image: true,
                 // about: true?
             }
         })
@@ -62,10 +67,65 @@ async function getUserById(id: number){
         }
     }
 }
+
+async function updateUserById(data: UpdateUser, id: number) {
+    try {
+        const currentUser = await client.user.findUnique({
+            where: {
+                id: id,
+            },
+        });
+
+        if (!currentUser) {
+            throw new Error("User not found");
+        }
+
+        const updatedData = {
+            ...currentUser,
+            ...data,
+        };
+
+        const user = await client.user.update({
+            where: {
+                id: id,
+            },
+            data: {
+                name: updatedData.name,
+                username: updatedData.username,
+                surname: updatedData.surname,
+                dateOfBirth: updatedData.dateOfBirth,
+                email: updatedData.email,
+                password: updatedData.password,
+                signature: updatedData.signature,
+
+            },
+        });
+        return user;
+
+    } catch (err) {
+        console.log(err);
+        if (err instanceof Prisma.PrismaClientKnownRequestError){
+            if (err.code == 'P2002'){
+                console.log(err.message);
+                throw err;
+            }
+            if (err.code == 'P2015'){
+                console.log(err.message);
+                throw err;
+            }
+            if (err.code == 'P20019'){
+                console.log(err.message);
+                throw err;
+            }
+        }
+    }
+}
+
 const userRepository = {
     findUserByEmail: findUserByEmail,
     createUser: createUser,
-    getUserById: getUserById
+    getUserById: getUserById,
+    updateUserById: updateUserById
 }
 
 export default userRepository;

@@ -3,7 +3,7 @@ import { hash, compare } from "bcryptjs";
 import { sign } from "jsonwebtoken";
 import { SECRET_KEY } from "../config/token";
 import userRepository from "./userRepository";
-import { CreateUser, User } from "./types";
+import { CreateUser, UpdateUser, User } from "./types";
 import nodemailer from 'nodemailer';
 
 const emailCodes = new Map<string, { code: string, expiresAt: number }>()
@@ -158,13 +158,37 @@ function saveCode(email: string, code: string) {
   emailCodes.set(normalizedEmail, { code, expiresAt });
 }
 
+async function updateUserById(data: UpdateUser, id: number): Promise<IOkWithData<UpdateUser> | IError> {
+  try {
+
+    let updateData = data;
+
+    if (updateData.password) {
+      const hashedPassword = await hash(String(data.password), 10);
+      updateData = { ...updateData, password: hashedPassword };
+    }
+
+    const user = await userRepository.updateUserById(updateData, id);
+
+    if (!user) {
+      return { status: 'error', message: "User doesn't update" };
+    }
+
+    return { status: 'success', data: user };
+  } catch (err) {
+    return { status: 'error', message: 'Internal server error' };
+  }
+}
+
+
 const userService = {
   login,
   registration,
   getUserById,
   sendEmail,
   verifyCode,
-  saveCode
+  saveCode,
+  updateUserById
 };
 
 export default userService;

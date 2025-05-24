@@ -16,7 +16,9 @@ async function getPosts(): Promise<IOkWithData<Post[]> | IError> {
 	return { status: "success", data: posts };
 }
 
-async function createPost(data: CreatePost): Promise<IOkWithData<Post> | IError> {
+async function createPost(
+	data: CreatePost
+): Promise<IOkWithData<Post> | IError> {
 	try {
 		let imagesInput: CreatePostData | undefined;
 
@@ -90,161 +92,194 @@ async function createPost(data: CreatePost): Promise<IOkWithData<Post> | IError>
 	}
 }
 
-async function editPost(data: IUpdatePost, id: number): Promise<IOkWithData<Post> | IError> {
-    try {
-        const API_BASE_URL = "http://192.168.1.104:3000";
-        const uploadDir = path.join(__dirname, "..", "..", "public", "uploads");
-        await fs.mkdir(uploadDir, { recursive: true });
+async function editPost(
+	data: IUpdatePost,
+	id: number
+): Promise<IOkWithData<Post> | IError> {
+	try {
+		const API_BASE_URL = "http://192.168.1.104:3000";
+		const uploadDir = path.join(__dirname, "..", "..", "public", "Uploads");
+		await fs.mkdir(uploadDir, { recursive: true });
 
-        // Отримуємо поточний пост
-        const currentPost = await prisma.userPost.findUnique({
-            where: { id },
-            include: { 
-                images: true,
-                tags: { include: { tag: true } }
-            },
-        });
+		// Отримуємо поточний пост
+		const currentPost = await prisma.userPost.findUnique({
+			where: { id },
+			include: {
+				images: true,
+				tags: { include: { tag: true } },
+			},
+		});
 
-        if (!currentPost) {
-            return { status: "error", message: "Пост не знайдено" };
-        }
+		if (!currentPost) {
+			return { status: "error", message: "Пост не знайдено" };
+		}
 
-        // Підготовка даних для оновлення
-        const updateData: IUpdatePost = {
-            name: data.name ?? currentPost.name,
-            text: data.text ?? currentPost.text,
-            theme: data.theme ?? currentPost.theme,
-            links: data.links ?? currentPost.links,
-            views: data.views ?? currentPost.views,
-            likes: data.likes ?? currentPost.likes,
-        };
+		// Підготовка даних для оновлення
+		const updateData: IUpdatePost = {
+			name: data.name ?? currentPost.name,
+			text: data.text ?? currentPost.text,
+			theme: data.theme ?? currentPost.theme,
+			links: data.links ?? currentPost.links,
+			views: data.views ?? currentPost.views,
+			likes: data.likes ?? currentPost.likes,
+		};
 
-        // Обробка зображень
-        if (data.images) {
-            // Створення нових зображень
-            if ('create' in data.images && Array.isArray(data.images.create)) {
-                const createdImages = await Promise.all(
-                    data.images.create.map(async (image) => {
-                        if (typeof image === 'object' && 'url' in image && image.url) {
-                            if (image.url.startsWith("data:image")) {
-                                const matches = image.url.match(/^data:image\/(\w+);base64,(.+)$/);
-                                if (!matches) throw new Error("Невірний формат зображення");
+		// Обробка зображень
+		if (data.images) {
+			if ("create" in data.images && Array.isArray(data.images.create)) {
+				const createdImages = await Promise.all(
+					data.images.create.map(async (image) => {
+						if (
+							typeof image === "object" &&
+							"url" in image &&
+							image.url
+						) {
+							if (image.url.startsWith("data:image")) {
+								const matches = image.url.match(
+									/^data:image\/(\w+);base64,(.+)$/
+								);
+								if (!matches)
+									throw new Error(
+										"Невірний формат зображення"
+									);
 
-                                const [_, ext, base64Data] = matches;
-                                const filename = `${Date.now()}-${Math.random().toString(36).substr(2, 9)}.${ext}`;
-                                const filePath = path.join(uploadDir, filename);
+								const [_, ext, base64Data] = matches;
+								const filename = `${Date.now()}-${Math.random()
+									.toString(36)
+									.substr(2, 9)}.${ext}`;
+								const filePath = path.join(uploadDir, filename);
 
-                                await fs.writeFile(filePath, base64Data, { encoding: "base64" });
-                                return { url: `uploads/${filename}` };
-                            }
-                            return { url: image.url };
-                        }
-                        throw new Error("Некоректні дані зображення");
-                    })
-                );
-                updateData.images = { create: createdImages };
-            }
+								await fs.writeFile(filePath, base64Data, {
+									encoding: "base64",
+								});
+								return { url: `uploads/${filename}` };
+							}
+							return { url: image.url };
+						}
+						throw new Error("Некоректні дані зображення");
+					})
+				);
+				updateData.images = { create: createdImages };
+			}
 
-            // Видалення зображень
-            if ('delete' in data.images) {
-                const toDelete = Array.isArray(data.images.delete) 
-                    ? data.images.delete 
-                    : [data.images.delete];
-                
-                const idsToDelete = toDelete
-                    .filter((img): img is { id: number } => typeof img === 'object' && 'id' in img)
-                    .map(img => img.id);
+			if ("delete" in data.images) {
+				const toDelete = Array.isArray(data.images.delete)
+					? data.images.delete
+					: [data.images.delete];
+				const idsToDelete = toDelete
+					.filter(
+						(img): img is { id: number } =>
+							typeof img === "object" && "id" in img
+					)
+					.map((img) => img.id);
 
-                if (idsToDelete.length > 0) {
-                    await prisma.image.deleteMany({
-                        where: { id: { in: idsToDelete } }
-                    });
-                }
-            }
-        }
+				if (idsToDelete.length > 0) {
+					updateData.images = {
+						...updateData.images,
+						delete: idsToDelete.map((id) => ({ id })),
+					};
+				}
+			}
+		}
 
-        // Обробка тегів
-        if (data.tags) {
-            await prisma.userPostTags.deleteMany({ where: { userPostId: id } });
+		// Обробка тегів
+		if (data.tags && Array.isArray(data.tags)) {
+			console.log("Отримані теги:", data.tags);
+			await prisma.userPostTags.deleteMany({ where: { userPostId: id } });
 
-            if (Array.isArray(data.tags)) {
-                await Promise.all(data.tags.map(async (tagName) => {
-                    if (typeof tagName === 'string') {
-                        let tag = await prisma.tags.findFirst({ where: { name: tagName } });
-                        if (!tag) {
-                            tag = await prisma.tags.create({ data: { name: tagName } });
-                        }
-                        await prisma.userPostTags.create({
-                            data: {
-                                userPostId: id,
-                                tagId: tag.id
-                            }
-                        });
-                    }
-                }));
-            }
-        }
+			const tagConnections = await Promise.all(
+				data.tags
+					.filter(
+						(tagName) =>
+							typeof tagName === "string" && tagName.trim() !== ""
+					)
+					.map(async (tagName) => {
+						let tag = await prisma.tags.findFirst({
+							where: { name: tagName },
+						});
+						if (!tag) {
+							tag = await prisma.tags.create({
+								data: { name: tagName },
+							});
+							console.log("Створено новий тег:", tag);
+						}
+						return { tagId: tag.id };
+					})
+			);
 
-        // Оновлення поста
-        const updatedPost = await prisma.userPost.update({
-            where: { id },
-            data: updateData,
-            include: {
-                images: true,
-                tags: true 
-            }
-        });
+			updateData.tags = {
+				create: tagConnections.map((connection) => ({
+					tag: { connect: { id: connection.tagId } },
+				})),
+			};
+		}
 
-        // Нормалізація URL для фронтенда
-        const normalizedPost = {
-            ...updatedPost,
-            images: updatedPost.images.map(img => ({
-                ...img,
-                url: img.url.startsWith('http') 
-                    ? img.url 
-                    : `${API_BASE_URL}/${img.url.replace(/\\/g, '/').replace(/^\/+/, '')}`
-            }))
-        };
+		// Оновлюємо пост
+		const updatedPost = await prisma.userPost.update({
+			where: { id },
+			data: updateData,
+			include: {
+				images: true,
+				tags: {
+					include: { tag: true },
+				},
+			},
+		});
 
-        return { status: "success", data: normalizedPost };
+		console.log("Оновлений пост:", JSON.stringify(updatedPost, null, 2));
 
-    } catch (err) {
-        console.error("Помилка при оновленні поста:", err);
-        return {
-            status: "error",
-            message: err instanceof Error ? err.message : "Помилка бази даних",
-        };
-    }
+		// Нормалізація URL для фронтенда
+		const normalizedPost = {
+			...updatedPost,
+			images: updatedPost.images.map((img) => ({
+				...img,
+				url: img.url.startsWith("http")
+					? img.url
+					: `${API_BASE_URL}/${img.url
+							.replace(/\\/g, "/")
+							.replace(/^\/+/, "")}`,
+			})),
+		};
+
+		return { status: "success", data: normalizedPost };
+	} catch (err) {
+		console.error("Помилка при оновленні поста:", err);
+		return {
+			status: "error",
+			message: err instanceof Error ? err.message : "Помилка бази даних",
+		};
+	}
 }
 
-
-
 async function deletePost(id: number): Promise<IOkWithData<Post> | IError> {
-    try {
-        const deletedPost = await postRepository.deletePost(id);
+	try {
+		const deletedPost = await postRepository.deletePost(id);
 
-        const result: Post = {
-            ...deletedPost,
-            tags: deletedPost.tags.map(t => ({
-                userPostId: t.userPostId,
-                tagId: t.tagId,
-                tag: t.tag
-            })),
-            images: deletedPost.images.map(img => ({
-                id: img.id,
-                userPostId: img.userPostId,
-                url: img.url
-            }))
-        };
+		const result: Post = {
+			...deletedPost,
+			tags: deletedPost.tags.map((t) => ({
+				userPostId: t.userPostId,
+				tagId: t.tagId,
+				tag: t.tag,
+			})),
+			images: deletedPost.images.map((img) => ({
+				id: img.id,
+				userPostId: img.userPostId,
+				url: img.url,
+			})),
+		};
 
-        return { status: "success", data: result };
-    } catch (error) {
-        console.error("Error in deletePost service:", error);
-        return {
-            status: "error",
-            message: error instanceof Error ? error.message : "Failed to delete post"
-        };
-    }
+		return { status: "success", data: result };
+	} catch (error) {
+		console.error("Error in deletePost service:", error);
+		return {
+			status: "error",
+			message:
+				error instanceof Error
+					? error.message
+					: "Failed to delete post",
+		};
+	}
 }
 
 const postService = {

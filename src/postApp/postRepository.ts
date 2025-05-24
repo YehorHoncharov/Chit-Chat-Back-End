@@ -7,7 +7,11 @@ async function getPosts(){
         let post = await prisma.userPost.findMany(
             {include: {
                 images: true,
-                tags: true
+                tags: {
+                    include: {
+                        tag: true
+                    }
+                }
             }})
         return post
     } catch(err){

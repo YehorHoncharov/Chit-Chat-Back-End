@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import postService from "./postService";
-import { saveBase64Image } from "../../utils/fileUtil";
+import { saveBase64Image } from "../utils/fileUtil";
 import { CreatePost, CreatePostBody } from "./types";
 
 async function getPosts(req: Request, res: Response) {
@@ -11,7 +11,6 @@ async function getPosts(req: Request, res: Response) {
 		res.json(result.data);
 	}
 }
-
 
 async function createPost(req: Request<{}, {}, CreatePostBody>, res: Response) {
 	try {
@@ -30,7 +29,7 @@ async function createPost(req: Request<{}, {}, CreatePostBody>, res: Response) {
 					console.error("Failed to process image:", imgError);
 				}
 			}
-			newPost.images = imagesToProcess
+			newPost.images = imagesToProcess;
 		}
 
 		const result = await postService.createPost(newPost);
@@ -40,7 +39,6 @@ async function createPost(req: Request<{}, {}, CreatePostBody>, res: Response) {
 		} else {
 			res.json(result.data);
 		}
-
 	} catch (error) {
 		console.error("Full controller error:", error);
 	}

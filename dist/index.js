@@ -1,0 +1,36 @@
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.API_BASE_URL = void 0;
+const express_1 = __importDefault(require("express"));
+const cors_1 = __importDefault(require("cors"));
+const userRouter_1 = __importDefault(require("./userApp/userRouter"));
+const postRouter_1 = __importDefault(require("./postApp/postRouter"));
+const albumRouter_1 = __importDefault(require("./albumApp/albumRouter"));
+const chat_router_1 = __importDefault(require("./Chats/chat.router"));
+const path_1 = __importDefault(require("path"));
+const friendshipRouter_1 = __importDefault(require("./friendshipApp/friendshipRouter"));
+const http_1 = require("http");
+const socket_1 = require("./socket");
+const message_router_1 = __importDefault(require("./Messages/message.router"));
+const app = (0, express_1.default)();
+const httpServer = (0, http_1.createServer)(app);
+(0, socket_1.initSocketServer)(httpServer);
+const PORT = 3000;
+const HOST = "192.168.0.253";
+exports.API_BASE_URL = `http://${HOST}:${PORT}`;
+app.use(express_1.default.json({ limit: "50mb" }));
+app.use(express_1.default.urlencoded({ limit: "50mb", extended: true }));
+app.use((0, cors_1.default)());
+app.use("/users", userRouter_1.default);
+app.use("/posts", postRouter_1.default);
+app.use("/albums", albumRouter_1.default);
+app.use("/uploads", express_1.default.static(path_1.default.join(__dirname, "..", "public", "uploads")));
+app.use("/friendship", friendshipRouter_1.default);
+app.use("/chats", chat_router_1.default);
+app.use("/messages", message_router_1.default);
+httpServer.listen(PORT, HOST, () => {
+    console.log(`server is running at http://${HOST}:${PORT}`);
+});

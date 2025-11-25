@@ -3,8 +3,10 @@
 	"version": "1.0.0",
 	"main": "index.js",
 	"scripts": {
-		"test": "echo \"No tests specified\"",
-		"start": "ts-node src/index.ts",
+		"test": "echo \"No tests specified\" && exit 0",
+		"start": "node dist/index.js",
+		"dev": "ts-node src/index.ts",
+		"build": "tsc",
 		"prisma:format": "prisma/schema format",
 		"prisma:migrate": "prisma migrate dev",
 		"prisma:seed": "ts-node prisma/seed.ts",

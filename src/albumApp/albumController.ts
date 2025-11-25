@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { saveBase64Image } from "../../utils/fileUtil";
+import { saveBase64Image } from "../utils/fileUtil";
 import albumService from "./albumService";
 
 async function getAlbums(req: Request, res: Response) {
@@ -11,13 +11,12 @@ async function getAlbums(req: Request, res: Response) {
 	}
 }
 
-
 async function createAlbum(req: Request, res: Response) {
-	let body = req.body
-	body.author_id = res.locals.userId
-	const result = await albumService.createAlbum(body)
+	let body = req.body;
+	body.author_id = res.locals.userId;
+	const result = await albumService.createAlbum(body);
 	if (result.status == "error") {
-		res.json(result)
+		res.json(result);
 	} else {
 		res.json(result.data);
 	}

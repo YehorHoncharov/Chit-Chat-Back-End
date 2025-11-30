@@ -20,8 +20,8 @@ function createChat(data) {
         const existingChat = yield prismaClient_1.default.chatGroup.findFirst({
             where: { name: data.name },
             include: {
-                members: true
-            }
+                members: true,
+            },
         });
         const result = yield chat_repository_1.default.createChat(data);
         if (!result) {

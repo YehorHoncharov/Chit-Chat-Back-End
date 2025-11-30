@@ -1,3 +1,4 @@
+
 import client from "../client/prismaClient";
 import { IErrors, errors } from "../config/errorCodes";
 import { Prisma } from "../generated/prisma";

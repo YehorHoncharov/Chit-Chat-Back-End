@@ -1,18 +1,17 @@
 import { Prisma } from "../generated/prisma";
 import { IOkWithData } from "../types/types";
-import { User } from "../userApp/types";
 
 export type Chat = Prisma.ChatGroupGetPayload<{
-	include:{
-		members: true,
-		chat_messages: true
-	}
+	include: {
+		members: true;
+		chat_messages: true;
+	};
 }>;
 export type CorrectChatForCreate = Prisma.ChatGroupGetPayload<{
-	include:{
-		members: true,
-		admin: true
-	}
+	include: {
+		members: true;
+		admin: true;
+	};
 }>;
 
 // export interface ICreateChatData{
@@ -43,12 +42,9 @@ export interface ILeaveChatPayload {
 	chatId: number;
 }
 
-export type IJoinChatCallback = (
-	response: IOkWithData<Chat>
-) => void;
+export type IJoinChatCallback = (response: IOkWithData<Chat>) => void;
 
-export type IChatUpdatePayload = Chat
-
+export type IChatUpdatePayload = Chat;
 
 // acknowledgment
 // В Socket.io acknowledgment (callback) це функція, яка відправляє повідомлення в

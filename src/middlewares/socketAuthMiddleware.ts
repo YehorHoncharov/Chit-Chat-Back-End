@@ -1,11 +1,11 @@
-import { verify } from 'jsonwebtoken';
-import { Socket } from 'socket.io'
-import { SECRET_KEY } from '../config/token';
-import { IToken } from './authTokenMiddleware';
+import { verify } from "jsonwebtoken";
+import { Socket } from "socket.io";
+import { SECRET_KEY } from "../config/token";
+import { IToken } from "./authTokenMiddleware";
 
 export async function socketAuthMiddleware(
 	socket: Socket,
-	next: (error?: any) => void
+	next: (error?: any) => void,
 ) {
 	const token = socket.handshake.auth.token;
 

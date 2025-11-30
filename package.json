@@ -10,7 +10,11 @@
 		"prisma:format": "prisma/schema format",
 		"prisma:migrate": "prisma migrate dev",
 		"prisma:seed": "ts-node prisma/seed.ts",
-		"prepare": "husky install"
+		"prepare": "husky install",
+		"lint": "eslint . --ext .ts",
+		"lint:fix": "eslint . --ext .ts --fix",
+		"format": "prettier --write .",
+		"copy:prisma": "cp -r src/generated dist/generated"
 	},
 	"keywords": [],
 	"author": "",
@@ -34,6 +38,15 @@
 		"@types/cors": "^2.8.17",
 		"@types/express": "^5.0.1",
 		"@types/nodemailer": "^6.4.17",
+		"@typescript-eslint/eslint-plugin": "^8.48.0",
+		"@typescript-eslint/parser": "^8.48.0",
+		"eslint": "^8.57.1",
+		"eslint-config-airbnb-base": "^15.0.0",
+		"eslint-config-prettier": "^10.1.8",
+		"eslint-plugin-import": "^2.32.0",
+		"eslint-plugin-prettier": "^5.5.4",
+		"eslint-plugin-simple-import-sort": "^12.1.1",
+		"prettier": "^3.7.3",
 		"ts-node": "^10.9.2",
 		"typescript": "^5.8.3"
 	},

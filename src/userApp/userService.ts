@@ -1,5 +1,5 @@
 import { IError, IOkWithData } from "../types/types";
-import { hash, compare } from "bcryptjs";
+import { hash } from "bcryptjs";
 import { sign } from "jsonwebtoken";
 import { SECRET_KEY } from "../config/token";
 import userRepository from "./userRepository";
@@ -29,7 +29,7 @@ async function getUserById(id: number): Promise<IOkWithData<User> | IError> {
 
 async function login(
 	email: string,
-	password: string
+	password: string,
 ): Promise<IOkWithData<string> | IError> {
 	try {
 		const user = await userRepository.findUserByEmail(email);
@@ -56,7 +56,7 @@ async function login(
 }
 
 async function registration(
-	userData: CreateUser
+	userData: CreateUser,
 ): Promise<IOkWithData<string> | IError> {
 	try {
 		const user = await userRepository.findUserByEmail(userData.email);
@@ -163,7 +163,7 @@ function saveCode(email: string, code: string) {
 
 async function updateUserById(
 	data: UpdateUser,
-	id: number
+	id: number,
 ): Promise<IOkWithData<UpdateUser> | IError> {
 	const createdImageFilename: string[] = [];
 	try {
@@ -179,7 +179,7 @@ async function updateUserById(
 			updateData.image.startsWith("data:image")
 		) {
 			const matches = updateData.image.match(
-				/^data:image\/(\w+);base64,(.+)$/
+				/^data:image\/(\w+);base64,(.+)$/,
 			);
 			if (!matches) {
 				return {
@@ -208,7 +208,7 @@ async function updateUserById(
 			}
 
 			const filename = `${Date.now()}-${Math.round(
-				Math.random() * 1000000
+				Math.random() * 1000000,
 			)}.${ext}`;
 			const filePath = path.join(uploadDir, filename);
 
@@ -256,8 +256,8 @@ async function updateUserById(
 						"..",
 						"public",
 						"uploads",
-						filename
-					)
+						filename,
+					),
 				)
 				.catch(() => {});
 		}

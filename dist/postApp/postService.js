@@ -34,17 +34,27 @@ function createPost(data) {
             let tagsInput;
             if (Array.isArray(data.tags)) {
                 if (data.tags.length > 10) {
-                    return { status: "error", message: "Максимум 10 тегів дозволено" };
+                    return {
+                        status: "error",
+                        message: "Максимум 10 тегів дозволено",
+                    };
                 }
                 for (const tag of data.tags) {
                     if (typeof tag !== "string" || tag.length > 50) {
-                        return { status: "error", message: "Кожен тег має бути рядком не довшим за 50 символів" };
+                        return {
+                            status: "error",
+                            message: "Кожен тег має бути рядком не довшим за 50 символів",
+                        };
                     }
                 }
                 const tagConnections = yield Promise.all(data.tags.map((tagName) => __awaiter(this, void 0, void 0, function* () {
-                    let tag = yield prismaClient_1.default.tags.findFirst({ where: { name: tagName } });
+                    let tag = yield prismaClient_1.default.tags.findFirst({
+                        where: { name: tagName },
+                    });
                     if (!tag) {
-                        tag = yield prismaClient_1.default.tags.create({ data: { name: tagName } });
+                        tag = yield prismaClient_1.default.tags.create({
+                            data: { name: tagName },
+                        });
                     }
                     return { tag: { connect: { id: tag.id, name: tag.name } } };
                 })));
@@ -55,14 +65,32 @@ function createPost(data) {
             let imageInput;
             if (Array.isArray(data.images)) {
                 if (data.images.length > 10) {
-                    return { status: "error", message: "Максимум 10 зображень дозволено" };
+                    return {
+                        status: "error",
+                        message: "Максимум 10 зображень дозволено",
+                    };
                 }
                 const imageConnections = yield Promise.all(data.images.map((mapImage) => __awaiter(this, void 0, void 0, function* () {
-                    let image = yield prismaClient_1.default.image.findFirst({ where: { file: mapImage.url } });
+                    let image = yield prismaClient_1.default.image.findFirst({
+                        where: { file: mapImage.url },
+                    });
                     if (!image) {
-                        image = yield prismaClient_1.default.image.create({ data: { file: mapImage.url, filename: mapImage.url } });
+                        image = yield prismaClient_1.default.image.create({
+                            data: {
+                                file: mapImage.url,
+                                filename: mapImage.url,
+                            },
+                        });
                     }
-                    return { image: { connect: { id: image.id, filename: image.filename, file: image.file } } };
+                    return {
+                        image: {
+                            connect: {
+                                id: image.id,
+                                filename: image.filename,
+                                file: image.file,
+                            },
+                        },
+                    };
                 })));
                 imageInput = {
                     create: imageConnections,
@@ -111,57 +139,73 @@ function editPost(data, id) {
                 include: {
                     images: {
                         select: {
-                            image: true
-                        }
+                            image: true,
+                        },
                     },
                     tags: {
                         select: {
-                            tag: true
-                        }
+                            tag: true,
+                        },
                     },
                     likes: true,
                     views: true,
-                }
+                },
             });
             if (!currentPost) {
                 console.error("[EditPost] Пост із ID", id, "не знайдено");
                 return { status: "error", message: "Пост не знайдено" };
             }
             const updateData = {
-                title: typeof data.title === "string" ? data.title.trim() : (_a = data.title) !== null && _a !== void 0 ? _a : currentPost.title,
-                content: typeof data.content === "string" ? data.content.trim() : (_b = data.content) !== null && _b !== void 0 ? _b : currentPost.content,
-                theme: typeof data.theme === "string" ? data.theme.trim() : (_c = data.theme) !== null && _c !== void 0 ? _c : currentPost.theme,
+                title: typeof data.title === "string"
+                    ? data.title.trim()
+                    : ((_a = data.title) !== null && _a !== void 0 ? _a : currentPost.title),
+                content: typeof data.content === "string"
+                    ? data.content.trim()
+                    : ((_b = data.content) !== null && _b !== void 0 ? _b : currentPost.content),
+                theme: typeof data.theme === "string"
+                    ? data.theme.trim()
+                    : ((_c = data.theme) !== null && _c !== void 0 ? _c : currentPost.theme),
             };
             // Обробка тегів
             if (data.tags && Array.isArray(data.tags)) {
                 if (data.tags.length > 10) {
                     console.error("[EditPost] Занадто багато тегів:", data.tags.length);
-                    return { status: "error", message: "Максимум 10 тегів дозволено" };
+                    return {
+                        status: "error",
+                        message: "Максимум 10 тегів дозволено",
+                    };
                 }
                 const validTags = data.tags
                     .filter((tag) => typeof tag === "string" && tag.trim().length > 0)
                     .filter((tag) => tag.length <= 50);
                 if (validTags.length !== data.tags.length) {
                     console.error("[EditPost] Некоректні теги:", data.tags);
-                    return { status: "error", message: "Некоректні теги або занадто довгі (макс. 50 символів)" };
+                    return {
+                        status: "error",
+                        message: "Некоректні теги або занадто довгі (макс. 50 символів)",
+                    };
                 }
-                const currentTagNames = currentPost.tags.map(t => t.tag.name);
-                const tagsToRemove = currentTagNames.filter(tag => !validTags.includes(tag));
-                const tagsToAdd = validTags.filter(tag => !currentTagNames.includes(tag));
+                const currentTagNames = currentPost.tags.map((t) => t.tag.name);
+                const tagsToRemove = currentTagNames.filter((tag) => !validTags.includes(tag));
+                const tagsToAdd = validTags.filter((tag) => !currentTagNames.includes(tag));
                 yield prismaClient_1.default.post_app_post_tag.deleteMany({
                     where: {
                         post_id: id,
                         tag: {
-                            name: { in: tagsToRemove }
-                        }
-                    }
+                            name: { in: tagsToRemove },
+                        },
+                    },
                 });
                 // Додаємо нові теги
                 if (tagsToAdd.length > 0) {
                     const tagConnections = yield Promise.all(tagsToAdd.map((tagName) => __awaiter(this, void 0, void 0, function* () {
-                        let tag = yield prismaClient_1.default.tags.findFirst({ where: { name: tagName } });
+                        let tag = yield prismaClient_1.default.tags.findFirst({
+                            where: { name: tagName },
+                        });
                         if (!tag) {
-                            tag = yield prismaClient_1.default.tags.create({ data: { name: tagName } });
+                            tag = yield prismaClient_1.default.tags.create({
+                                data: { name: tagName },
+                            });
                         }
                         return { tag: { connect: { id: tag.id } } };
                     })));
@@ -176,24 +220,26 @@ function editPost(data, id) {
                 const allowedFormats = ["jpeg", "png", "gif"];
                 const maxSizeInBytes = 5 * 1024 * 1024; // 5 МБ
                 const currentImages = currentPost.images;
-                const imagesToDelete = currentImages.filter(currentImg => {
+                const imagesToDelete = currentImages.filter((currentImg) => {
                     if (data.images)
-                        return data.images.some(newImg => newImg.id === currentImg.image.id);
+                        return data.images.some((newImg) => newImg.id === currentImg.image.id);
                 });
                 if (imagesToDelete.length > 0) {
                     yield prismaClient_1.default.post_app_post_image.deleteMany({
                         where: {
                             post_id: id,
-                            image_id: { in: imagesToDelete.map(img => img.image.id) }
-                        }
+                            image_id: {
+                                in: imagesToDelete.map((img) => img.image.id),
+                            },
+                        },
                     });
                     yield prismaClient_1.default.image.deleteMany({
                         where: {
-                            id: { in: imagesToDelete.map(img => img.image.id) }
-                        }
+                            id: { in: imagesToDelete.map((img) => img.image.id) },
+                        },
                     });
                 }
-                const newImages = data.images.filter(img => !img.id);
+                const newImages = data.images.filter((img) => !img.id);
                 const createImages = [];
                 for (const image of newImages) {
                     try {
@@ -235,14 +281,14 @@ function editPost(data, id) {
                     }
                 }
                 updateData.images = {
-                    create: createImages.map(img => ({
+                    create: createImages.map((img) => ({
                         image: {
                             create: {
                                 filename: img.url,
-                                file: img.url
-                            }
-                        }
-                    }))
+                                file: img.url,
+                            },
+                        },
+                    })),
                 };
             }
             // Оновлення поста
@@ -257,8 +303,12 @@ function editPost(data, id) {
             });
             // Нормалізація URL зображень
             const normalizedPost = Object.assign(Object.assign({}, updatedPost), { images: updatedPost.images.map((img) => {
-                    const relativeUrl = img.image.filename.replace(/\\/g, "/").replace(/^uploads\/+/, "");
-                    const fullUrl = img.image.filename.startsWith("http") ? img.image.filename : `${__1.API_BASE_URL}/uploads/${relativeUrl}`;
+                    const relativeUrl = img.image.filename
+                        .replace(/\\/g, "/")
+                        .replace(/^uploads\/+/, "");
+                    const fullUrl = img.image.filename.startsWith("http")
+                        ? img.image.filename
+                        : `${__1.API_BASE_URL}/uploads/${relativeUrl}`;
                     console.log(`[EditPost] Нормалізований URL зображення: ${fullUrl}`);
                     return Object.assign(Object.assign({}, img), { url: fullUrl });
                 }) });
@@ -285,7 +335,9 @@ function editPost(data, id) {
             for (const filename of createdImageUrls) {
                 const filePath = path_1.default.join(__dirname, "..", "..", "public", "uploads", filename);
                 console.log(`[EditPost] Видаляємо файл: ${filePath}`);
-                yield promises_1.default.unlink(filePath).catch((e) => console.error("[EditPost] Помилка видалення файлу:", e));
+                yield promises_1.default
+                    .unlink(filePath)
+                    .catch((e) => console.error("[EditPost] Помилка видалення файлу:", e));
             }
             return {
                 status: "error",

@@ -1,5 +1,7 @@
-import dotenv from "dotenv"
+import dotenv from "dotenv";
 
-dotenv.config()
+dotenv.config();
 
-export const SECRET_KEY = process.env.SECRET_KEY ? process.env.SECRET_KEY : "chitchat" 
+export const SECRET_KEY = process.env.SECRET_KEY
+	? process.env.SECRET_KEY
+	: "chitchat";

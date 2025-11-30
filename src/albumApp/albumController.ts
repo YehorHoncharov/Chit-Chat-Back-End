@@ -1,5 +1,4 @@
 import { Request, Response } from "express";
-import { saveBase64Image } from "../utils/fileUtil";
 import albumService from "./albumService";
 
 async function getAlbums(req: Request, res: Response) {

@@ -12,11 +12,11 @@ This repository contains the server-side application for **WorldItSocialNetwork*
 
 ## 🚀 Technologies Used
 
--   **Core:** Node.js, TypeScript, Express.js
--   **Database:** SQLite (via Prisma ORM)
--   **Authentication:** JWT, Bcrypt
--   **File Handling:** Multer
--   **Communication:** Nodemailer
+- **Core:** Node.js, TypeScript, Express.js
+- **Database:** SQLite (via Prisma ORM)
+- **Authentication:** JWT, Bcrypt
+- **File Handling:** Multer
+- **Communication:** Nodemailer
 
 ---
 

@@ -15,7 +15,7 @@ const httpServer = createServer(app);
 initSocketServer(httpServer);
 
 const PORT = 3000;
-const HOST = "192.168.0.253";
+const HOST = "0.0.0.0";
 export const API_BASE_URL = `http://${HOST}:${PORT}`;
 
 app.use(express.json({ limit: "50mb" }));
@@ -31,7 +31,7 @@ app.use("/albums", albumRouter);
 
 app.use(
 	"/uploads",
-	express.static(path.join(__dirname, "..", "public", "uploads"))
+	express.static(path.join(__dirname, "..", "public", "uploads")),
 );
 
 app.use("/friendship", friendshipRouter);

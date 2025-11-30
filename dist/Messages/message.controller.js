@@ -48,5 +48,5 @@ function deleteAllMessagesFromChat(req, res) {
 exports.messageController = {
     getMessage,
     createMessage,
-    deleteAllMessagesFromChat
+    deleteAllMessagesFromChat,
 };

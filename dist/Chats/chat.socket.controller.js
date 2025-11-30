@@ -29,8 +29,7 @@ function joinChat(socket, data, callback) {
         }
     });
 }
-function updateChat(socket, data) {
-}
+function updateChat(socket, data) { }
 function registerChat(socket) {
     socket.on("joinChat", (data, callback) => {
         joinChat(socket, data, callback);

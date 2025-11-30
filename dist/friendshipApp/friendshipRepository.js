@@ -22,7 +22,7 @@ function createFriendship(data) {
                 data: {
                     profile1_id: data.profile1_id,
                     profile2_id: data.profile2_id,
-                }
+                },
             });
             return friendship;
         }
@@ -44,15 +44,15 @@ function getFriendship() {
         }
         catch (err) {
             if (err instanceof prisma_1.Prisma.PrismaClientKnownRequestError) {
-                if (err.code == 'P2002') {
+                if (err.code == "P2002") {
                     console.log(err.message);
                     throw err;
                 }
-                if (err.code == 'P2015') {
+                if (err.code == "P2015") {
                     console.log(err.message);
                     throw err;
                 }
-                if (err.code == 'P20019') {
+                if (err.code == "P20019") {
                     console.log(err.message);
                     throw err;
                 }
@@ -103,6 +103,6 @@ const friendshipRepository = {
     createFriendship: createFriendship,
     getFriendship: getFriendship,
     updateFriendship: updateFriendship,
-    deleteFriendship: deleteFriendship
+    deleteFriendship: deleteFriendship,
 };
 exports.default = friendshipRepository;

@@ -22,29 +22,29 @@ function getAlbums() {
                 include: {
                     images: {
                         select: {
-                            image: true
-                        }
+                            image: true,
+                        },
                     },
                     topic: {
                         select: {
-                            tag: true
-                        }
-                    }
-                }
+                            tag: true,
+                        },
+                    },
+                },
             });
             return post;
         }
         catch (err) {
             if (err instanceof client_1.Prisma.PrismaClientKnownRequestError) {
-                if (err.code == 'P2002') {
+                if (err.code == "P2002") {
                     console.log(err.message);
                     throw err;
                 }
-                if (err.code == 'P2015') {
+                if (err.code == "P2015") {
                     console.log(err.message);
                     throw err;
                 }
-                if (err.code == 'P20019') {
+                if (err.code == "P20019") {
                     console.log(err.message);
                     throw err;
                 }
@@ -61,15 +61,15 @@ function createAlbum(data) {
                 include: {
                     topic: {
                         select: {
-                            tag: true
-                        }
+                            tag: true,
+                        },
                     },
                     images: {
                         select: {
-                            image: true
-                        }
-                    }
-                }
+                            image: true,
+                        },
+                    },
+                },
             });
             return createAlbum;
         }
@@ -77,7 +77,7 @@ function createAlbum(data) {
             console.log("==================");
             console.log(err);
             if (err instanceof client_1.Prisma.PrismaClientKnownRequestError) {
-                if (err.code == 'P2002') {
+                if (err.code == "P2002") {
                     console.log(err.message);
                     throw err;
                 }
@@ -95,15 +95,15 @@ function editAlbum(data, id) {
                 include: {
                     images: {
                         select: {
-                            image: true
-                        }
+                            image: true,
+                        },
                     },
                     topic: {
                         select: {
-                            tag: true
-                        }
-                    }
-                }
+                            tag: true,
+                        },
+                    },
+                },
             });
         }
         catch (err) {
@@ -120,31 +120,31 @@ function deleteAlbum(id) {
                 include: {
                     images: {
                         select: {
-                            image: true
-                        }
+                            image: true,
+                        },
                     },
                     topic: {
                         select: {
-                            tag: true
-                        }
-                    }
-                }
+                            tag: true,
+                        },
+                    },
+                },
             });
             if (!deletedAlbum) {
                 throw console.log("Album not found!");
             }
             yield prismaClient_1.default.post_app_album_images.deleteMany({
-                where: { album_id: id }
+                where: { album_id: id },
             });
             const imageIds = deletedAlbum.images.map((img) => img.image.id);
             yield prismaClient_1.default.image.deleteMany({
-                where: { id: { in: imageIds } }
+                where: { id: { in: imageIds } },
             });
             yield prismaClient_1.default.post_app_album_tags.deleteMany({
-                where: { album_id: id }
+                where: { album_id: id },
             });
             yield prismaClient_1.default.album.delete({
-                where: { id }
+                where: { id },
             });
             return deletedAlbum;
         }

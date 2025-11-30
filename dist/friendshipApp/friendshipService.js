@@ -54,6 +54,6 @@ const friendshipService = {
     createFriendship: createFriendship,
     getFriendship: getFriendship,
     acceptFriendship,
-    deleteFriendship
+    deleteFriendship,
 };
 exports.default = friendshipService;

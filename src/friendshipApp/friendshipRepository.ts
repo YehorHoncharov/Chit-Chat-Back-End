@@ -4,92 +4,96 @@ import { errors, IErrors } from "../config/errorCodes";
 import { CreateFriendship, UpdateFriendship, WhereFriendship } from "./types";
 
 async function createFriendship(data: CreateFriendship) {
-    try {
-
-        const friendship = await client.friendship.create({
-            data: {
-                profile1_id: data.profile1_id,
-                profile2_id: data.profile2_id,
-            }
-        })
-        return friendship;
-    } catch (error) {
-        if (error instanceof Prisma.PrismaClientKnownRequestError) {
-            if (error.code in Object.keys(errors)) {
-                const errorKey: keyof IErrors = error.code
-                console.log(errors[errorKey])
-            }
-        }
-    }
+	try {
+		const friendship = await client.friendship.create({
+			data: {
+				profile1_id: data.profile1_id,
+				profile2_id: data.profile2_id,
+			},
+		});
+		return friendship;
+	} catch (error) {
+		if (error instanceof Prisma.PrismaClientKnownRequestError) {
+			if (error.code in Object.keys(errors)) {
+				const errorKey: keyof IErrors = error.code;
+				console.log(errors[errorKey]);
+			}
+		}
+	}
 }
-
-
 
 async function getFriendship() {
-    try {
-        let friendship = await client.friendship.findMany()
-        return friendship
-    } catch (err) {
-        if (err instanceof Prisma.PrismaClientKnownRequestError) {
-            if (err.code == 'P2002') {
-                console.log(err.message);
-                throw err;
-            }
-            if (err.code == 'P2015') {
-                console.log(err.message);
-                throw err;
-            }
-            if (err.code == 'P20019') {
-                console.log(err.message);
-                throw err;
-            }
-        }
-    }
+	try {
+		let friendship = await client.friendship.findMany();
+		return friendship;
+	} catch (err) {
+		if (err instanceof Prisma.PrismaClientKnownRequestError) {
+			if (err.code == "P2002") {
+				console.log(err.message);
+				throw err;
+			}
+			if (err.code == "P2015") {
+				console.log(err.message);
+				throw err;
+			}
+			if (err.code == "P20019") {
+				console.log(err.message);
+				throw err;
+			}
+		}
+	}
 }
 
-async function updateFriendship(data: UpdateFriendship, where: WhereFriendship) {
-    try {
-        return await client.friendship.update({
-            where: where,
-            data,
-        });
-    } catch (err) {
-        console.log("Error in updateFriendship:", err);
-        throw err;
-    }
+async function updateFriendship(
+	data: UpdateFriendship,
+	where: WhereFriendship,
+) {
+	try {
+		return await client.friendship.update({
+			where: where,
+			data,
+		});
+	} catch (err) {
+		console.log("Error in updateFriendship:", err);
+		throw err;
+	}
 }
 async function deleteFriendship(profile1Id: number, profile2Id: number) {
+	const friendship = await client.friendship.findFirst({
+		where: {
+			OR: [
+				{ profile1_id: profile1Id, profile2_id: profile2Id },
+				{ profile1_id: profile2Id, profile2_id: profile1Id },
+			],
+		},
+	});
 
-    const friendship = await client.friendship.findFirst({
-        where: {
-            OR: [
-                { profile1_id: profile1Id, profile2_id: profile2Id },
-                { profile1_id: profile2Id, profile2_id: profile1Id },
-            ],
-        },
-    });
+	if (!friendship) {
+		console.error(
+			"Friendship not found between",
+			profile1Id,
+			"and",
+			profile2Id,
+		);
+		return null;
+	}
 
-    if (!friendship) {
-        console.error("Friendship not found between", profile1Id, "and", profile2Id);
-        return null;
-    }
+	await client.friendship.delete({
+		where: {
+			profile1_id_profile2_id: {
+				profile1_id: friendship.profile1_id,
+				profile2_id: friendship.profile2_id,
+			},
+		},
+	});
 
-    await client.friendship.delete({
-        where: {
-            profile1_id_profile2_id: {
-                profile1_id: friendship.profile1_id,
-                profile2_id: friendship.profile2_id,
-            },
-        },
-    });
-
-    return friendship;
+	return friendship;
 }
 
 const friendshipRepository = {
-    createFriendship: createFriendship,
-    getFriendship: getFriendship,
-    updateFriendship: updateFriendship,
-    deleteFriendship: deleteFriendship
-}
+	createFriendship: createFriendship,
+	getFriendship: getFriendship,
+	updateFriendship: updateFriendship,
+	deleteFriendship: deleteFriendship,
+};
 export default friendshipRepository;

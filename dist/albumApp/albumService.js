@@ -36,13 +36,20 @@ function createAlbum(data) {
             }
             for (const tag of data.topic) {
                 if (typeof tag !== "string" || tag.length > 50) {
-                    return { status: "error", message: "Кожен тег має бути рядком не довшим за 50 символів" };
+                    return {
+                        status: "error",
+                        message: "Кожен тег має бути рядком не довшим за 50 символів",
+                    };
                 }
             }
             const tagConnections = yield Promise.all(data.topic.map((topicName) => __awaiter(this, void 0, void 0, function* () {
-                let tag = yield prismaClient_1.default.tags.findFirst({ where: { name: topicName } });
+                let tag = yield prismaClient_1.default.tags.findFirst({
+                    where: { name: topicName },
+                });
                 if (!tag) {
-                    tag = yield prismaClient_1.default.tags.create({ data: { name: topicName } });
+                    tag = yield prismaClient_1.default.tags.create({
+                        data: { name: topicName },
+                    });
                 }
                 return { tag: { connect: { id: tag.id, name: tag.name } } };
             })));
@@ -54,7 +61,7 @@ function createAlbum(data) {
             name: data.name,
             topic: topicInput,
             author_id: data.author_id,
-            images: data.images
+            images: data.images,
         };
         const result = yield albumRepository_1.albumRepository.createAlbum(albumData);
         console.log(result);
@@ -77,18 +84,20 @@ function editAlbum(data, id) {
                 include: {
                     images: {
                         select: {
-                            image: true
-                        }
+                            image: true,
+                        },
                     },
                     topic: {
                         select: {
-                            tag: true
-                        }
+                            tag: true,
+                        },
                     },
-                }
+                },
             });
             const updateData = {
-                name: typeof data.name === "string" ? (_a = data.name) === null || _a === void 0 ? void 0 : _a.trim() : (_b = data.name) !== null && _b !== void 0 ? _b : currentAlbum === null || currentAlbum === void 0 ? void 0 : currentAlbum.name,
+                name: typeof data.name === "string"
+                    ? (_a = data.name) === null || _a === void 0 ? void 0 : _a.trim()
+                    : ((_b = data.name) !== null && _b !== void 0 ? _b : currentAlbum === null || currentAlbum === void 0 ? void 0 : currentAlbum.name),
             };
             // Обробка тегів
             if (data.tags && Array.isArray(data.tags)) {
@@ -97,25 +106,30 @@ function editAlbum(data, id) {
                     .filter((tag) => tag.length <= 50);
                 if (validTags.length !== data.tags.length) {
                     console.error("[EditAlbum] Некоректні теги:", data.tags);
-                    return { status: "error", message: "Некоректний тег або занадто довгий (макс. 50 символів)" };
+                    return {
+                        status: "error",
+                        message: "Некоректний тег або занадто довгий (макс. 50 символів)",
+                    };
                 }
                 const currentTags = yield prismaClient_1.default.post_app_album_tags.findMany({
                     where: { album_id: id },
-                    include: { tag: true }
+                    include: { tag: true },
                 });
                 if (validTags.length > 0) {
                     yield prismaClient_1.default.post_app_album_tags.deleteMany({
-                        where: { album_id: id }
+                        where: { album_id: id },
                     });
                     const lastTag = validTags[validTags.length - 1];
-                    let tag = yield prismaClient_1.default.tags.findFirst({ where: { name: lastTag } });
+                    let tag = yield prismaClient_1.default.tags.findFirst({
+                        where: { name: lastTag },
+                    });
                     if (!tag) {
                         tag = yield prismaClient_1.default.tags.create({ data: { name: lastTag } });
                     }
                     updateData.topic = {
                         create: {
-                            tag: { connect: { id: tag.id } }
-                        }
+                            tag: { connect: { id: tag.id } },
+                        },
                     };
                 }
             }
@@ -125,22 +139,26 @@ function editAlbum(data, id) {
                 const maxSizeInBytes = 5 * 1024 * 1024; // 5 МБ
                 const currentImages = currentAlbum === null || currentAlbum === void 0 ? void 0 : currentAlbum.images;
                 console.log(currentImages);
-                const imagesToDelete = currentImages === null || currentImages === void 0 ? void 0 : currentImages.filter(currentImg => {
+                const imagesToDelete = currentImages === null || currentImages === void 0 ? void 0 : currentImages.filter((currentImg) => {
                     if (data.images)
-                        return data.images.some(newImg => newImg.image.id === currentImg.image.id);
+                        return data.images.some((newImg) => newImg.image.id === currentImg.image.id);
                 });
                 if (imagesToDelete) {
                     if (imagesToDelete.length > 0) {
                         yield prismaClient_1.default.post_app_album_images.deleteMany({
                             where: {
                                 album_id: id,
-                                image_id: { in: imagesToDelete.map(img => img.image.id) }
-                            }
+                                image_id: {
+                                    in: imagesToDelete.map((img) => img.image.id),
+                                },
+                            },
                         });
                         yield prismaClient_1.default.image.deleteMany({
                             where: {
-                                id: { in: imagesToDelete.map(img => img.image.id) }
-                            }
+                                id: {
+                                    in: imagesToDelete.map((img) => img.image.id),
+                                },
+                            },
                         });
                     }
                 }
@@ -185,14 +203,14 @@ function editAlbum(data, id) {
                     }
                 }
                 updateData.images = {
-                    create: createImages.map(img => ({
+                    create: createImages.map((img) => ({
                         image: {
                             create: {
                                 filename: img.url,
-                                file: img.url
-                            }
-                        }
-                    }))
+                                file: img.url,
+                            },
+                        },
+                    })),
                 };
             }
             // Оновлення поста
@@ -207,8 +225,12 @@ function editAlbum(data, id) {
             });
             // Нормалізація URL зображень
             const normalizedAlbum = Object.assign(Object.assign({}, updatedAlbum), { images: updatedAlbum.images.map((img) => {
-                    const relativeUrl = img.image.filename.replace(/\\/g, "/").replace(/^uploads\/+/, "");
-                    const fullUrl = img.image.filename.startsWith("http") ? img.image.filename : `${__1.API_BASE_URL}/uploads/${relativeUrl}`;
+                    const relativeUrl = img.image.filename
+                        .replace(/\\/g, "/")
+                        .replace(/^uploads\/+/, "");
+                    const fullUrl = img.image.filename.startsWith("http")
+                        ? img.image.filename
+                        : `${__1.API_BASE_URL}/uploads/${relativeUrl}`;
                     console.log(`[EditPost] Нормалізований URL зображення: ${fullUrl}`);
                     return Object.assign(Object.assign({}, img), { url: fullUrl });
                 }) });
@@ -235,7 +257,9 @@ function editAlbum(data, id) {
             for (const filename of createdImageUrls) {
                 const filePath = path_1.default.join(__dirname, "..", "..", "public", "uploads", filename);
                 console.log(`[EditPost] Видаляємо файл: ${filePath}`);
-                yield promises_1.default.unlink(filePath).catch((e) => console.error("[EditPost] Помилка видалення файлу:", e));
+                yield promises_1.default
+                    .unlink(filePath)
+                    .catch((e) => console.error("[EditPost] Помилка видалення файлу:", e));
             }
             return {
                 status: "error",

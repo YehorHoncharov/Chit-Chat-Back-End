@@ -25,18 +25,18 @@ function createChat(data) {
                 admin_id: data.admin_id,
                 members: Array.isArray(data.members)
                     ? {
-                        create: data.members.map(member => ({
-                            profile_id: member.id
-                        }))
+                        create: data.members.map((member) => ({
+                            profile_id: member.id,
+                        })),
                     }
-                    : undefined
+                    : undefined,
             };
             const chatGroup = yield prismaClient_1.default.chatGroup.create({
                 data: correctedData,
                 include: {
                     members: true,
-                    admin: true
-                }
+                    admin: true,
+                },
             });
             return chatGroup;
         }
@@ -49,7 +49,7 @@ function createChat(data) {
                 }
             }
             else {
-                console.error('Unexpected error:', error);
+                console.error("Unexpected error:", error);
             }
             throw error;
         }
@@ -63,7 +63,7 @@ function getAllChats() {
                     chat_messages: true,
                     members: true,
                     admin: true,
-                }
+                },
             });
             return chat;
         }
@@ -85,8 +85,8 @@ function getChat(where) {
                 include: {
                     chat_messages: true,
                     members: true,
-                    admin: true
-                }
+                    admin: true,
+                },
             });
             return chat;
         }

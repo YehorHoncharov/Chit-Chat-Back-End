@@ -15,11 +15,11 @@ export function registerFriendshipSocket(socket: AuthenticatedSocket) {
 }
 
 async function createFriendship(req: Request, res: Response) {
-	let body = req.body
-	body.profile1_id = res.locals.userId
-	const result = await friendshipService.createFriendship(body)
+	let body = req.body;
+	body.profile1_id = res.locals.userId;
+	const result = await friendshipService.createFriendship(body);
 	if (result.status == "error") {
-		res.json(result)
+		res.json(result);
 	} else {
 		res.json(result.data);
 	}
@@ -33,10 +33,13 @@ async function getFriendship(req: Request, res: Response) {
 	}
 }
 
-async function acceptFriendship(req: Request<{}, {}, AcceptedFriendshipBody>, res: Response) {
-	let data = req.body
-	const id = res.locals.userId
-	const where = { profile1_id: data.id, profile2_id: +id }
+async function acceptFriendship(
+	req: Request<{}, {}, AcceptedFriendshipBody>,
+	res: Response,
+) {
+	let data = req.body;
+	const id = res.locals.userId;
+	const where = { profile1_id: data.id, profile2_id: +id };
 	const result = await friendshipService.acceptFriendship(where);
 	if (result.status == "error") {
 		res.json("error");
@@ -58,7 +61,7 @@ async function deleteFriendship(req: Request, res: Response) {
 
 	const deletedFriendship = await friendshipService.deleteFriendship(
 		userId,
-		otherUserId
+		otherUserId,
 	);
 
 	if (!deletedFriendship) {
@@ -80,8 +83,7 @@ const friendshipController = {
 	createFriendship: createFriendship,
 	getFriendship: getFriendship,
 	acceptFriendship,
-	deleteFriendship
-}
+	deleteFriendship,
+};
 
-
-export default friendshipController
+export default friendshipController;

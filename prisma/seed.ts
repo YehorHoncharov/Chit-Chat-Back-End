@@ -1,18 +1,19 @@
-import { PrismaClient } from "../src/generated/prisma";
+import { PrismaClient } from "@prisma/client/extension";
 
-const client = new PrismaClient()
+
+const client = new PrismaClient();
 
 async function updateFriendship() {
-    try {
-        return await client.friendship.delete({
-            where: {
-                id: 21
-            },
-        });
-    } catch (err) {
-        console.log("Error in editAlbum:", err);
-        throw err;
-    }
+	try {
+		return await client.friendship.delete({
+			where: {
+				id: 21,
+			},
+		});
+	} catch (err) {
+		console.log("Error in editAlbum:", err);
+		throw err;
+	}
 }
 
-updateFriendship()
+updateFriendship();

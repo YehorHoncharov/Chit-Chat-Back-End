@@ -9,7 +9,7 @@ async function saveBase64Image(base64: string): Promise<string> {
 	if (!matches) {
 		console.error(
 			"Invalid base64 format:",
-			base64.substring(0, 50) + "..."
+			base64.substring(0, 50) + "...",
 		);
 		throw new Error("Invalid base64 image format");
 	}
@@ -24,7 +24,7 @@ async function saveBase64Image(base64: string): Promise<string> {
 		await fs
 			.access(UPLOAD_DIR)
 			.then(() => true)
-			.catch(() => false)
+			.catch(() => false),
 	);
 
 	try {

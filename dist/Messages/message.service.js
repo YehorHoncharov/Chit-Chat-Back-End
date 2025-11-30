@@ -46,5 +46,5 @@ function deleteAllMessagesFromChat(id) {
 exports.messageService = {
     createMessage,
     getMessage,
-    deleteAllMessagesFromChat
+    deleteAllMessagesFromChat,
 };

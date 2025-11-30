@@ -87,6 +87,6 @@ const friendshipController = {
     createFriendship: createFriendship,
     getFriendship: getFriendship,
     acceptFriendship,
-    deleteFriendship
+    deleteFriendship,
 };
 exports.default = friendshipController;

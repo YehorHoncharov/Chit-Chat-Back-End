@@ -63,6 +63,6 @@ function deleteAllMessagesFromChat(chatId) {
 const messageRepository = {
     createMessage,
     getMessage,
-    deleteAllMessagesFromChat
+    deleteAllMessagesFromChat,
 };
 exports.default = messageRepository;

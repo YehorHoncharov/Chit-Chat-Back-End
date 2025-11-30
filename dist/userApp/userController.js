@@ -70,8 +70,8 @@ function updateUserById(req, res) {
         let id = +req.params.id;
         let data = req.body;
         const user = yield userService_1.default.updateUserById(data, id);
-        if (user.status == 'error') {
-            res.send('error');
+        if (user.status == "error") {
+            res.send("error");
         }
         else {
             res.json(user.data);
@@ -81,8 +81,8 @@ function updateUserById(req, res) {
 function getUsers(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         const context = yield userService_1.default.getUsers();
-        if (context.status == 'error') {
-            res.send('error');
+        if (context.status == "error") {
+            res.send("error");
         }
         else {
             res.json(context.data);
@@ -96,6 +96,6 @@ const userController = {
     sendCode,
     updateUserById,
     getUsers,
-    getUserByReqId
+    getUserByReqId,
 };
 exports.default = userController;

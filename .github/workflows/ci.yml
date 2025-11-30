@@ -25,10 +25,6 @@ jobs:
             - name: Build project
               run: npm run build
 
-            # -------------------------------
-            #   DOCKER BUILD & PUSH (GHCR)
-            # -------------------------------
-
             - name: Login to GHCR
               uses: docker/login-action@v3
               with:
@@ -45,4 +41,4 @@ jobs:
                   context: .
                   file: ./Dockerfile
                   push: true
-                  tags: ghcr.io/${{ github.repository_owner }}/${{ secrets.IMAGE_NAME }}:latest
+                  tags: ghcr.io/${{ github.repository_owner }}/worlditsocialnetwork-backend:latest

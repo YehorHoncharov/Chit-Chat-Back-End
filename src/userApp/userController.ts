@@ -44,7 +44,9 @@ async function updateUserById(req: Request, res: Response) {
 	let data = req.body;
 	const user = await userService.updateUserById(data, id);
 	if (user.status == "error") {
-		res.send("error");
+		return res
+			.status(404)
+			.json({ status: "error", message: "No user found" });
 	} else {
 		res.json(user.data);
 	}
@@ -53,7 +55,9 @@ async function updateUserById(req: Request, res: Response) {
 async function getUsers(req: Request, res: Response) {
 	const context = await userService.getUsers();
 	if (context.status == "error") {
-		res.send("error");
+		return res
+			.status(404)
+			.json({ status: "error", message: "No users found" });
 	} else {
 		res.json(context.data);
 	}

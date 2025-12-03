@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { messageService } from "./message.service";
+import { messageService } from "./messageService";
 
 async function createMessage(req: Request, res: Response) {
 	const body = req.body;

@@ -1,12 +1,12 @@
-import { MessagePayload } from "../Messages/message.type";
+import { MessagePayload } from "../messagesApp/types";
 import { AuthenticatedSocket } from "../types/socket";
-import { chatService } from "./chat.service";
+import { chatService } from "./chatService";
 import {
 	IChatUpdatePayload,
 	IJoinChatCallback,
 	IJoinChatPayload,
 	ILeaveChatPayload,
-} from "./chat.type";
+} from "./types";
 
 import { Server } from "socket.io";
 

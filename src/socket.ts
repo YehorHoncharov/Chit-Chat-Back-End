@@ -9,7 +9,7 @@ import {
 import {
 	chatSocketController,
 	setSocketServerInstance,
-} from "./Chats/chat.socket.controller";
+} from "./сhatsApp/chatSocketController";
 import { socketAuthMiddleware } from "./middlewares/socketAuthMiddleware";
 import { registerFriendshipSocket } from "./friendshipApp/friendshipController";
 

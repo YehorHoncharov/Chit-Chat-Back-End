@@ -1,13 +1,13 @@
 import { Socket } from "socket.io";
-import { IChatClientEvents, IChatServerEvents } from "../Chats/chat.type";
-import {
-	IMessageClientEvents,
-	IMessageServerEvents,
-} from "../Messages/message.type";
+import { IChatClientEvents, IChatServerEvents } from "../сhatsApp/types";
 import {
 	IFriendshipClientEvents,
 	IFriendshipServerEvents,
 } from "../friendshipApp/types";
+import {
+	IMessageClientEvents,
+	IMessageServerEvents,
+} from "../messagesApp/types";
 
 export type AppServerEvents = IMessageServerEvents &
 	IChatServerEvents &

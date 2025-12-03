@@ -1,7 +1,7 @@
 import { Prisma } from "../generated/prisma";
 import client from "../client/prismaClient";
 import { errors, IErrors } from "../config/errorCodes";
-import { CreateMessage, MessageWhereUnique } from "./message.type";
+import { CreateMessage, MessageWhereUnique } from "./types";
 
 async function createMessage(data: CreateMessage) {
 	try {

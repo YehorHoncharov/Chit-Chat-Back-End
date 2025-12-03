@@ -1,5 +1,5 @@
 import { NextFunction } from "express";
-import { chatService } from "./chat.service";
+import { chatService } from "./chatService";
 import { Request, Response } from "express";
 
 async function getChats(req: Request, res: Response, next: NextFunction) {

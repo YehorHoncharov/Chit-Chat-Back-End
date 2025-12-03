@@ -1,7 +1,7 @@
-import { Chat } from "../Chats/chat.type";
+import { Chat } from "../сhatsApp/types";
 import { IError, IOk, IOkWithData } from "../types/types";
-import { CreateMessage, DeletedMessagesInfo, Message } from "./message.type";
-import messageRepository from "./messages.repository";
+import { CreateMessage, DeletedMessagesInfo, Message } from "./types";
+import messageRepository from "./messagesRepository";
 
 async function createMessage(
 	data: CreateMessage,

@@ -3,12 +3,12 @@ import cors from "cors";
 import userRouter from "./userApp/userRouter";
 import postRouter from "./postApp/postRouter";
 import albumRouter from "./albumApp/albumRouter";
-import chatsRouter from "./Chats/chat.router";
+import chatsRouter from "./сhatsApp/chatRouter";
 import path from "path";
 import friendshipRouter from "./friendshipApp/friendshipRouter";
 import { createServer } from "http";
 import { initSocketServer } from "./socket";
-import messageRouter from "./Messages/message.router";
+import messageRouter from "./messagesApp/messageRouter";
 
 const app: Express = express();
 const httpServer = createServer(app);

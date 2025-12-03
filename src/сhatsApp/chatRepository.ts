@@ -1,6 +1,6 @@
 import { Prisma } from "../generated/prisma";
 import client from "../client/prismaClient";
-import { CreateChat, WhereChat } from "./chat.type";
+import { CreateChat, WhereChat } from "./types";
 import { errors, IErrors } from "../config/errorCodes";
 
 async function createChat(data: CreateChat) {

@@ -1,8 +1,9 @@
 import client from "../client/prismaClient";
-import { MessagePayload } from "../Messages/message.type";
+import { MessagePayload } from "../messagesApp/types";
+
 import { IError, IOk, IOkWithData } from "../types/types";
-import chatRepository from "./chat.repository";
-import { Chat, CorrectChatForCreate, CreateChat } from "./chat.type";
+import chatRepository from "./chatRepository";
+import { Chat, CorrectChatForCreate, CreateChat } from "./types";
 
 async function createChat(
 	data: CreateChat,

@@ -41,5 +41,5 @@ app.use("/chats", chatsRouter);
 app.use("/messages", messageRouter);
 
 httpServer.listen(PORT, HOST, () => {
-	console.log(`server is running at http://${HOST}:${PORT}`);
+	console.log(`server is running at http://localhost:${PORT}`);
 });

@@ -14,6 +14,7 @@
 		"lint": "eslint . --ext .ts",
 		"lint:fix": "eslint . --ext .ts --fix",
 		"format": "prettier --write .",
+		"prettier:check": "prettier --check .",
 		"copy:prisma": "cp -r src/generated dist/generated"
 	},
 	"keywords": [],

@@ -1,19 +1,19 @@
-FROM node:18-alpine
+FROM oven/bun:latest
 
 WORKDIR /app
 
-COPY package*.json ./
+COPY package.json bun.lockb* ./
 
-RUN npm install
+RUN bun install
 
 COPY . .
 
-RUN npx prisma generate   
+RUN bunx prisma generate
 
-RUN npm run build     
+RUN bun run build
 
-RUN npm run copy:prisma
+RUN powershell -Command "New-Item -ItemType Directory -Force dist/generated | Out-Null; Copy-Item -Recurse -Force src/generated/* dist/generated" || true
 
 EXPOSE 3000
 
-CMD ["node", "dist/index.js"]
+CMD ["bun", "dist/index.js"]

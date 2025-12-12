@@ -1,18 +1,19 @@
 # 🌐 WorldItSocialNetwork – Back-End
 
-![Node.js](https://img.shields.io/badge/Node.js-43853D?style=for-the-badge&logo=node.js&logoColor=white)
+![Bun](https://img.shields.io/badge/Bun-%23000000.svg?style=for-the-badge&logo=bun&logoColor=white)
 ![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)
 ![Express.js](https://img.shields.io/badge/Express.js-404D59?style=for-the-badge)
 ![Prisma](https://img.shields.io/badge/Prisma-3982CE?style=for-the-badge&logo=Prisma&logoColor=white)
 ![SQLite](https://img.shields.io/badge/SQLite-07405E?style=for-the-badge&logo=sqlite&logoColor=white)
 
-This repository contains the server-side application for **WorldItSocialNetwork**, a social media platform designed for connectivity and interaction. Built with a modern tech stack, it provides robust APIs for user management, real-time messaging, posts, and media handling.
+This repository contains the server-side application for **WorldItSocialNetwork**, a social media platform designed for connectivity and interaction.  
+It now uses **Bun** as a modern, ultra-fast runtime instead of Node.js.
 
 ---
 
 ## 🚀 Technologies Used
 
-- **Core:** Node.js, TypeScript, Express.js
+- **Core:** Bun, TypeScript, Express.js
 - **Database:** SQLite (via Prisma ORM)
 - **Authentication:** JWT, Bcrypt
 - **File Handling:** Multer
@@ -53,7 +54,7 @@ WorldItSocialNetwork-Back-End/
 ## 1️⃣ Install Dependencies
 
 ```bash
-npm install
+bun install
 ```
 
 ## 2️⃣ Environment Configuration
@@ -67,13 +68,13 @@ JWT_SECRET="your_super_secret_key"
 ## 3️⃣ Run Migrations
 
 ```bash
-npm run prisma:migrate
+bun run prisma:migrate
 ```
 
 ## 4️⃣ Start the Server
 
 ```bash
-npm run dev
+bun run dev
 ```
 
 ---
@@ -147,11 +148,19 @@ public/uploads/
 
 ---
 
-# 📜 NPM Scripts
+# 📜 Bun Scripts
 
-| Command                | Description            |
-| ---------------------- | ---------------------- |
-| npm run start          | Run project            |
-| npm run prisma:format  | Format prisma's models |
-| npm run prisma:migrate | Run migrations         |
-| npm run prisma:seed    | Run seeds              |
+| Command                    | Description                                                           |
+| -------------------------- | --------------------------------------------------------------------- |
+| **bun run start**          | Run compiled project from `dist/index.js`                             |
+| **bun run dev**            | Run project in development mode using Bun (runs TypeScript directly)  |
+| **bun run build**          | Build TypeScript → JavaScript (`tsc`)                                 |
+| **bun run prisma:format**  | Format Prisma schema                                                  |
+| **bun run prisma:migrate** | Apply Prisma migrations                                               |
+| **bun run prisma:seed**    | Run Prisma seed                                                       |
+| **bun run lint**           | Run ESLint                                                            |
+| **bun run lint:fix**       | Fix ESLint issues automatically                                       |
+| **bun run format**         | Format code with Prettier                                             |
+| **bun run prettier:check** | Check formatting with Prettier                                        |
+| **bun run copy:prisma**    | Copy generated Prisma client to `dist/generated` (Windows PowerShell) |
+| **bun run release**        | Run semantic-release                                                  |

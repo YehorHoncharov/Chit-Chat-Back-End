@@ -17,24 +17,39 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v3
-            - uses: actions/setup-node@v3
-              with:
-                  node-version: "24"
-            - run: npm ci
-            - run: npm run lint
-            - run: npm run prettier:check
+
+            - name: Install Bun
+              uses: oven-sh/setup-bun@v1
+
+            - name: Install dependencies
+              run: bun install
+
+            - name: Run ESLint
+              run: bunx eslint . --ext .ts
+
+            - name: Run Prettier check
+              run: bunx prettier --check .
 
     build-and-test:
         needs: lint
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v3
-            - uses: actions/setup-node@v3
-              with:
-                  node-version: "24"
-            - run: npm ci
-            - run: npm run build
-            - run: npm test
+
+            - name: Install Bun
+              uses: oven-sh/setup-bun@v1
+
+            - name: Install dependencies
+              run: bun install
+
+            - name: Generate Prisma Client
+              run: bunx prisma generate
+
+            - name: Build project
+              run: bun run build
+
+            - name: Run tests
+              run: bun test
 
             - name: Login to GHCR
               uses: docker/login-action@v3
@@ -68,7 +83,7 @@ jobs:
               with:
                   node-version: "24"
 
-            - name: Install dependencies
+            - name: Install dependencies (for semantic-release only)
               run: npm ci
 
             - name: Run semantic-release
